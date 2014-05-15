@@ -1,0 +1,62 @@
+UTENTE(
+	MAIL
+	nome
+	cognome
+	indirizzo
+	profilo(categoria, valuta)	?????
+)
+
+
+CONTO DEPOSITO(
+	IBAN
+	ammontare
+	mail_utente ##<- chiave esterna
+	)
+
+CONTO CREDITO(
+	IBAN
+	ammontare
+	tetto_max
+	iban_deposito ##<- chiave esterna a conto deposito
+	mail_utente ##<- chiave esterna a utente
+	)
+
+TRANSAZIONE(
+	DATA
+	)
+	##categorie di transazione:
+	-ENTRATA(
+		DATA ##<- chiave esterna a transazione
+		categoria_entrata
+		entita_economica
+		descrizione
+		iban ##<- chiave esterna a conto deposito/credito
+		tipo_conto #2 tipologie esclusive: deposito e credito
+	)
+	-SPESA(
+		DATA ##<- chiave esterna a transazione
+		categoria_spesa
+		entita_economica
+		descrizione
+		iban ##<- chiave esterna a conto deposito/credito
+		tipo_conto #2 tipologie esclusive: deposito e credito
+	)
+)
+
+BILANCIO(
+	ID_BILANCIO
+	quantita
+	scandenza ##<- data in cui i conti vengono aggiornati (insieme alla scadenza stessa che slitta al periodo successivo)
+	periodo
+	mail ##<- chiave esterna a utente
+)
+
+COLLEGA_SPESA_BILANCIO(
+	data_spesa ##<- chiave esterna a spesa
+	id_bilancio ##<- chiave esterna a bilancio
+)
+
+COLLEGA_CONTO_BILANCIO(
+	iban_conto ##<- chiave esterna a conto
+	id_bilancio ##<- chiave esterna a bilancio
+)
