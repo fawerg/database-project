@@ -55,6 +55,25 @@ E-mail: ".$row['mail']."
 	return $string;
 
 }
+function print_conti($username){
+	$db = connection_pgsql();
+	
+	$sql= "SELECT iban, tipologia FROM progetto_db.conto WHERE mail = $1";
+	$result= pg_prepare($db , "q", $sql);
+	$value = array($username);
+	$result= pg_execute($db, "q", $value);
+	$s="";
+	$i=1;
+	while($row = pg_fetch_assoc($result)){
+		$s.="<pre>Conto".$i.": 
+			Iban: ".$row['iban']."
+			Tipologia: ".$row['tipologia']."</pre>";
+		$i++;
+	}
+	pg_free_result($result);
+	pg_close($db);
+	return $s;
+}
 
 function print_conti_dep($username){
 	$db = connection_pgsql();
@@ -64,11 +83,13 @@ function print_conti_dep($username){
 	$value = array($username);
 	$result= pg_execute($db, "q", $value);
 	$s="";
+	$i=1;
 	while($row = pg_fetch_assoc($result)){
-		$s.="<pre>
+		$s.="<pre>Conto".$i.": 
 			Iban: ".$row['iban']."
 			Disponibilità: ".$row['disponibilita_denaro']."
 		</pre>";
+		$i++;
 	}
 	pg_free_result($result);
 	pg_close($db);
@@ -83,8 +104,9 @@ function print_conti_cred($username){
 	$value = array($username);
 	$result= pg_execute($db, "q", $value);
 	$s="";
+	$i=1;
 	while($row = pg_fetch_assoc($result)){
-		$s.="<pre>
+		$s.="<pre>Conto".$i.": 
 			Iban: ".$row['iban']."
 			Disponibilità: ".$row['disponibilita_denaro']."
 			Tetto: ".$row['tetto_massimo']."

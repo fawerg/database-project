@@ -42,9 +42,7 @@
 							<div class='div-table'>Dati Personali</div>
 							".print_user_data($_SESSION['isLogged'])."
 							<div class='div-table'>Conti Aperti</div>
-							<pre>
- Iban: IT17X0605502100000001234567		Denaro: 10000.00 €
- Iban: IT17X0605502125700001234567		Denaro: 1000.00 €
+							<pre>".print_conti($_SESSION['isLogged'])."
 							</pre>
 							<div class='div-table'>Transazioni Effettuate</div>
 							<pre>
