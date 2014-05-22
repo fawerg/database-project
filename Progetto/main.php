@@ -101,6 +101,7 @@
 								print "<div> Registrazione avvenuta con successo </div>";
 								print "<div> Registrazione avvenuta con successo </div>";
 								sleep (4);
+								
 								header ("Location: alter-test.php");
 							}
 							

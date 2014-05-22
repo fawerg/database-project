@@ -11,18 +11,28 @@ $category=array(
     'steve' => 'admin',
     'john' => 'user');
   
-function user_check($name,$pass) {
+function user_check($name, $pass) {
 //verifica la correttezza di login e password inserite e imposta il contenuto della sessione
 
-global $users;
-
-    if ($users[$name] && $users[$name] == $pass){
-        $_SESSION['isLogged'] = $name;
-        return(true);
-    }
-    else
-        return(false);
-
+	$db = connection_pgsql();
+	
+	$sql = "SELECT pwd, nome FROM progetto_db.utente WHERE mail = $1";
+	$result = pg_prepare($db, "q", $sql);
+	$value = array($name);
+	$result = pg_execute($db, "q", $value);
+	$row = pg_fetch_assoc($result);
+	
+	pg_free_result($result);
+	pg_close($db);
+	
+	print_r ($row);
+	
+	if($row['pwd'] == $pass){
+		$_SESSION['isLogged'] = $row['nome'];
+		return true;
+	}
+	else
+		return false;
 }
   
 function user_category($name)  {
