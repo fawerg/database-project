@@ -56,6 +56,46 @@ E-mail: ".$row['mail']."
 
 }
 
+function print_conti_dep($username){
+	$db = connection_pgsql();
+	
+	$sql= "SELECT iban, disponibilita_denaro FROM progetto_db.conto_deposito WHERE mail = $1";
+	$result= pg_prepare($db , "q", $sql);
+	$value = array($username);
+	$result= pg_execute($db, "q", $value);
+	$s="";
+	while($row = pg_fetch_assoc($result)){
+		$s.="<pre>
+			Iban: ".$row['iban']."
+			Disponibilità: ".$row['disponibilita_denaro']."
+		</pre>";
+	}
+	pg_free_result($result);
+	pg_close($db);
+	return $s;	
+}
+
+function print_conti_cred($username){
+	$db = connection_pgsql();
+	
+	$sql= "SELECT iban, disponibilita_denaro,tetto_massimo, iban_deposito FROM progetto_db.conto_credito WHERE mail = $1";
+	$result= pg_prepare($db , "q", $sql);
+	$value = array($username);
+	$result= pg_execute($db, "q", $value);
+	$s="";
+	while($row = pg_fetch_assoc($result)){
+		$s.="<pre>
+			Iban: ".$row['iban']."
+			Disponibilità: ".$row['disponibilita_denaro']."
+			Tetto: ".$row['tetto_massimo']."
+			Iban conto deposito associato: ".$row['iban_deposito']."
+		</pre>";
+	}
+	pg_free_result($result);
+	pg_close($db);
+	return $s;
+}
+
 function user_logout() {
 //disconnette l'utente eliminando il contenuto della sessione
     

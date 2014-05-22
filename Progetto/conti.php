@@ -1,5 +1,5 @@
 <?php
-    ini_set('display_errors','Off');
+    ini_set('display_errors','On');
     define ('LOGINEXPIRE', 300);
     ini_set('session.cookie_lifetime',LOGINEXPIRE);
     session_start();
@@ -16,7 +16,7 @@
 		<table class='table-ext'>
 			<?php
 				include_once('bdlab-lib-fun.php');
-                if ($_SESSION['isLogged'] && !$_GET["mod"]){			
+               			 if ($_SESSION['isLogged']){			
 					print "<tr>
 							<td class='td-menu'>
 								<a href='test.html'>Gestione Profilo</a>
@@ -34,12 +34,23 @@
 								<a href=\"logout.php\">Logout</a>
 							</td>
 						</tr>
-					<tr>
+						<tr>
 		
-						<td>
+							<td colspan='5' class='td-containt'>
+								<div class='div-table'>
+									Conti di deposito: 
+								</div>".print_conti_dep($_SESSION['isLogged'])."
 								
-						</td>
-					</tr>";
+							
+						
+						
+							
+								<div class='div-table'>
+									Conti di credito: 
+								</div>".print_conti_cred($_SESSION['isLogged'])."
+							
+							</td>
+						</tr>";
 				}
 			?>
 		</table>
