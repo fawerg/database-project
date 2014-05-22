@@ -40,46 +40,60 @@
 						</tr>";
 					if(!isset($_POST['continua'])){
 						print "<tr>
-							<form class=\"padding-el\" method=\"post\" action=\"cc.php\">
-								<td colspan ='6' class= 'td-containt'>
-									<pre>Dettagli conto: </pre>
-									<pre> Tipologia: <select name='tipo'><option>Deposito</option><option>Credito</option></select></pre>
-									<pre><input type='submit' name='continua' value='Coninua'></pre>
-								</td>	
-							</form>
-						</tr>
-						";
+							<td colspan='6' class='td-containt'>
+								<div class='div-table'>Dettagli Conto</div>
+								<form class=\"padding-el\" method=\"post\" action=\"cc.php\">
+									<table>
+										<tr>
+											<td>Tipologia:</td>
+											<td><select name='tipo'><option>Deposito</option><option>Credito</option></select></td>
+										</tr>
+									</table>	
+									<input type='submit' name='continua' value='Coninua'>
+								</form>
+							</td>
+						</tr>";
 					}
 					else{
 						if($_POST['tipo']=='Deposito'){
-							print "<form class='padding-el' method='POST' action='cc.php'>
-									<table'>
-										<tr>
-											<td class='td-containt'>Ammontare: </td>
-											<td class='td-containt><input type='text' name='ammontare'/></td>
-										</tr>
-									</table>
-									<input type='submit' name='crea' value='Crea conto'>
-								<form>";
+							print "<tr>
+								<td colspan='6' class='td-containt'>
+									<div class='div-table'>Dettagli Conto</div>
+									<form class='padding-el' method='POST' action='cc.php'>
+										<table>
+											<tr>
+												<td>Ammontare: </td>
+												<td><input type='text' name='ammontare'/></td>
+											</tr>
+										</table>
+										<input type='submit' name='crea' value='Crea conto'>
+									<form>
+								</td>
+							</tr>";
 						}
 						else{
-							print "<form class='padding-el' method='POST' action='cc.php'>
-									<table>
-										<tr>
-											<td colspan='6' class='td-containt>Ammontare: </td>
-											<td colspan='6' class='td-containt><input type='text' name='ammontare'/></td>
-										</tr>
-										<tr>
-											<td colspan='6' class='td-containt>Tetto: </td>
-											<td colspan='6' class='td-containt><input type='text' name='tetto'/></td>
-										</tr>
-										<tr>
-											<td colspan='6' class='td-containt>Deposito riferimento: </td>
-											<td colspan='6' class='td-containt><input type='text' name='dep'/></td>
-										</tr>
-									</table>
-									<input type='submit' name='crea' value='Crea conto'>
-								<form>";
+							print "<tr>
+								<td colspan='6' class='td-containt'>
+									<div class='div-table'>Dettagli Conto</div>
+									<form class='padding-el' method='POST' action='cc.php'>
+										<table>
+											<tr>
+												<td>Ammontare:</td>
+												<td><input type='text' name='ammontare'/></td>
+											</tr>
+											<tr>
+												<td>Tetto:</td>
+												<td><input type='text' name='tetto'/></td>
+											</tr>
+											<tr>
+												<td>Deposito Riferimento:</td>
+												<td><input type='text' name='diprif'/></td>
+											</tr>
+										</table>
+										<input type='submit' name='crea' value='Crea conto'>
+									<form>
+								</td>
+							</tr>";
 						}
 					}
 				}
