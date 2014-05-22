@@ -37,9 +37,7 @@
 					<tr>
 						<td colspan='5' class='td-containt'>
 							<div class='div-table'>Dati Personali</div>
-							<pre>".print_user_data($_SESSION['isLogged'])."
-	 							
-							</pre>
+							".print_user_data($_SESSION['isLogged'])."
 							<div class='div-table'>Conti Aperti</div>
 							<pre>
  Iban: IT17X0605502100000001234567		Denaro: 10000.00 €

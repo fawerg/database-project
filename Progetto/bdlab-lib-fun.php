@@ -35,7 +35,24 @@ global $category;
 }*/
 
 function print_user_data($username){
-
+	
+	$db = connection_pgsql();
+	
+	$sql = "SELECT nome, cognome, indirizzo, mail FROM progetto_db.utente WHERE mail = $1";
+	$result = pg_prepare($db, "q", $sql);
+	$value = array($username);
+	$result = pg_execute($db, "q", $value);
+	$row = pg_fetch_assoc($result);
+	$string = "<pre>
+Nome: ".$row['nome']."
+Cognome: ".$row['cognome']."
+Indirizzo: ".$row['indirizzo']."
+E-mail: ".$row['mail']."
+			</pre>";
+	pg_free_result($result);
+	pg_close($db);
+	
+	return $string;
 
 }
 
