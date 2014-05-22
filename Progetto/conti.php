@@ -53,6 +53,15 @@
 								</div>".print_conti_cred($_SESSION['isLogged'])."
 							
 							</td>
+						</tr>
+						<tr>
+							<td colspan='6' class='td-containt'>
+								<form class=\"padding-el\" method=\"post\" action=\"cc.php\">									
+									
+											<input type=\"submit\" value=\"Crea Nuovo Conto\" />
+										
+								</form>
+							</td>
 						</tr>";
 				}
 			?>
