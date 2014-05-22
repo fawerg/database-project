@@ -37,11 +37,8 @@
 					<tr>
 						<td colspan='5' class='td-containt'>
 							<div class='div-table'>Dati Personali</div>
-							<pre>
- Nome: Marco
- Cognome: Taddei
- Indirizzo: Via Crescenzago 26, Milano
- Mail: m.taddei92@gmail.com
+							<pre>".print_user_data($_SESSION['isLogged'])."
+	 							
 							</pre>
 							<div class='div-table'>Conti Aperti</div>
 							<pre>
