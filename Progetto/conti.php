@@ -18,6 +18,9 @@
 				include_once('bdlab-lib-fun.php');
                			 if ($_SESSION['isLogged']){			
 					print "<tr>
+							<td class='td-menu-home'>
+								<a href='alter-test.php'>H</a>
+							</td>
 							<td class='td-menu'>
 								<a href='test.html'>Gestione Profilo</a>
 							</td>
@@ -36,7 +39,7 @@
 						</tr>
 						<tr>
 		
-							<td colspan='5' class='td-containt'>
+							<td colspan='6' class='td-containt'>
 								<div class='div-table'>
 									Conti di deposito: 
 								</div>".print_conti_dep($_SESSION['isLogged'])."

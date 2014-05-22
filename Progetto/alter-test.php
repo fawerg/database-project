@@ -19,7 +19,7 @@
                 if ($_SESSION['isLogged'] && !$_GET["mod"]){			
 					print "<tr>
 						<td class='td-menu-home'>
-						
+							<a href='alter-test.php'>H</a>
 						</td>
 						<td class='td-menu'>
 							<a href='test.html'>Gestione Profilo</a>
@@ -38,7 +38,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td colspan='5' class='td-containt'>
+						<td colspan='6' class='td-containt'>
 							<div class='div-table'>Dati Personali</div>
 							".print_user_data($_SESSION['isLogged'])."
 							<div class='div-table'>Conti Aperti</div>
