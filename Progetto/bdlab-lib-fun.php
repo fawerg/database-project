@@ -1,5 +1,5 @@
 <?php
-include_once('conf.php');
+include_once('../../conf.php');
   
 function user_check($name, $pass) {
 //verifica la correttezza di login e password inserite e imposta il contenuto della sessione
