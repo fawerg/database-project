@@ -13,8 +13,33 @@
 	</head>
 	<body>
 		<div class="div-header">BANCHE FOTTI SOLDI - TUTTE INTORNO A VOI</div>
-			<table class='table-ext'>
-				
-			</table>
+		<table class='table-ext'>
+			<?php
+				include_once('bdlab-lib-fun.php');
+                if ($_SESSION['isLogged'] && !$_GET["mod"]){			
+					print "<tr>
+							<td class='td-menu'>
+								<a href='test.html'>Gestione Profilo</a>
+							</td>
+							<td class='td-menu'>
+								<a href=\"conti.php\">Gestione Conti</a>
+							</td>
+							<td class='td-menu'>
+								<a href=\"test.html\">Gestione Transazioni</a>
+							</td>
+							<td class='td-menu'>
+								<a href=\"test.html\">Gestione Bilanci</a>
+							</td>
+							<td class='td-menu'>
+								<a href=\"logout.php\">Logout</a>
+							</td>
+						</tr>
+					<tr>
+		
+						<td>
+						</td>
+					</tr>";
+				}
+			?>
 	</body>
 </html>
