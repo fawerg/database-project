@@ -19,21 +19,25 @@ a {
 
 .td-menu{
 	width: 19%;
-	font-size: medium;
+	font-size: large;
 	text-align: center; 
 	border-style: solid;
 	border-color: rgb(70, 130, 180);
 	border-width: 1px;
+	padding-bottom: 5px;
+	padding-top: 5px;
 	background-color: rgb(204, 204, 255);
 }
 
 .td-menu-home{
 	width: 5%;
-	font-size: medium;
+	font-size: large;
 	text-align: center; 
 	border-style: solid;
 	border-color: rgb(70, 130, 180);
 	border-width: 1px;
+	padding-bottom: 5px;
+	padding-top: 5px;
 	background-color: rgb(204, 204, 255);
 }
 
