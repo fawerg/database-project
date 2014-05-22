@@ -42,5 +42,6 @@
 					</tr>";
 				}
 			?>
+		</table>
 	</body>
 </html>
