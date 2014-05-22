@@ -18,6 +18,9 @@
 				include_once('bdlab-lib-fun.php');
                 if ($_SESSION['isLogged'] && !$_GET["mod"]){			
 					print "<tr>
+						<td class='td-menu-home'>
+						
+						</td>
 						<td class='td-menu'>
 							<a href='test.html'>Gestione Profilo</a>
 						</td>
