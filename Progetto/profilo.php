@@ -9,7 +9,7 @@
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 		<link href="alter-style.css" rel="stylesheet" type="text/css" />
-		<title>Pagina Test</title>
+		<title>Profilo</title>
 	</head>
 	<body>
 		<div class="div-header">BANCHE FOTTI SOLDI - TUTTE INTORNO A VOI</div>

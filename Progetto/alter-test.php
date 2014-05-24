@@ -9,7 +9,7 @@
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 		<link href="alter-style.css" rel="stylesheet" type="text/css" />
-		<title>Pagina Test</title>
+		<title>Home</title>
 	</head>
 	<body>
 		<div class="div-header">BANCHE FOTTI SOLDI - TUTTE INTORNO A VOI</div>
@@ -70,7 +70,7 @@
 										<td><input type=\"password\" name=\"pass\" /></td>
 									</tr>
 								</table>
-								<input type=\"submit\" value=\"Login\" />
+								<input type=\"submit\" value=\"Login\"/>    <a href=\"main.php\">Registrati</a>
 							</form>
 						</td>
 					</tr>";
