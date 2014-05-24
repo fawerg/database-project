@@ -22,7 +22,7 @@
 							<a href='alter-test.php'>H</a>
 						</td>
 						<td class='td-menu'>
-							<a href='test.html'>Gestione Profilo</a>
+							<a href='profilo.php'>Gestione Profilo</a>
 						</td>
 						<td class='td-menu'>
 							<a href=\"conti.php\">Gestione Conti</a>
