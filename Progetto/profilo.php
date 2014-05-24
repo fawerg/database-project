@@ -47,7 +47,7 @@
 							</td>
 						</tr>
 						";
-						if(!isset($_POST['mod_name']) && !isset($_POST['mod_surname']) && !isset($_POST['mod_address']) && !isset($_POST['mod_mail'])){
+						if(!isset($_POST['mod_name']) && !isset($_POST['mod_surname']) && !isset($_POST['mod_address']) && !isset($_POST['mod_mail']) && !isset($_POST['mod_n'])){
 							print 
 							"<tr>
 								<td colspan='6' class='td-containt'>
@@ -72,25 +72,34 @@
 										<table>
 											<tr>";
 								if(isset($_POST['mod_name'])){
-									print "Nuovo Nome: ";
+									print "Nuovo Nome: <input type='text' name='mod_n'>";
+									$n="nome";
 								}
 								if(isset($_POST['mod_surname'])){
-									print "Nuovo Cognome: ";
+									print "Nuovo Cognome: <input type='text' name='mod_c'>";
+									$n="cognome";
 								}
 								if(isset($_POST['mod_address'])){
-									print "Nuovo Indirizzo: ";
+									print "Nuovo Indirizzo: <input type='text' name='mod_a'>";
+									$n="indirizzo";
 								}
 								if(isset($_POST['mod_mail'])){
-									print "Nuova Mail: ";
+									print "Nuova Mail: <input type='text' name='mod_m'>";
+									$n="mail";
 								}
 								print"
-												<input type='text' name='mod'>
+												
 											</tr>
 										</table>
 									</form>
 								</td>
 							</tr>";
+							
 						}
+						if(isset($_POST['mod_n'])){
+							print"CIAO";
+						}
+						
 				}
 			?>
 		</table>
