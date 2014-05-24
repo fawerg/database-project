@@ -12,7 +12,7 @@
 		<title>Profilo</title>
 	</head>
 	<body>
-		<div class="div-header">BANCHE FOTTI SOLDI - TUTTE INTORNO A VOI</div>
+		<div class="div-header">HOME BANKING - LA BANCA A CASA TUA</div>
 		<table class='table-ext'>
 			<?php
 				include_once('bdlab-lib-fun.php');
@@ -72,19 +72,19 @@
 										<table>
 											<tr>";
 								if(isset($_POST['mod_name'])){
-									print "Nuovo Nome: <input type='text' name='mod_n'>";
+									print "Nuovo Nome: <input type='text' name='mod_n'><input type='submit' value='Continua'>";
 									$n="nome";
 								}
 								if(isset($_POST['mod_surname'])){
-									print "Nuovo Cognome: <input type='text' name='mod_c'>";
+									print "Nuovo Cognome: <input type='text' name='mod_c'><input type='submit' value='Continua'>";
 									$n="cognome";
 								}
 								if(isset($_POST['mod_address'])){
-									print "Nuovo Indirizzo: <input type='text' name='mod_a'>";
+									print "Nuovo Indirizzo: <input type='text' name='mod_a'><input type='submit' value='Continua'>";
 									$n="indirizzo";
 								}
 								if(isset($_POST['mod_mail'])){
-									print "Nuova Mail: <input type='text' name='mod_m'>";
+									print "Nuova Mail: <input type='text' name='mod_m'><input type='submit' value='Continua'>";
 									$n="mail";
 								}
 								print"
@@ -97,7 +97,9 @@
 							
 						}
 						if(isset($_POST['mod_n'])){
-							print"CIAO";
+							change_name($_SESSION['isLogged'], $_POST['mod_n'] );
+							print"
+							<meta http-equiv=\"refresh\" content=\"0\">";
 						}
 						
 				}

@@ -118,6 +118,17 @@ function print_conti_cred($username){
 	return $s;
 }
 
+function change_name($username, $name){
+	$db=connection_pgsql();
+	$sql="UPDATE progetto_db.utente SET nome=$2 WHERE mail=$1";
+	$result= pg_prepare($db, "q", $sql);
+	$value=array($username, $name);
+	$result=pg_execute($db, "q", $value);
+	pg_free_result($result);
+	pg_close($db);
+	
+}
+
 function user_logout() {
 //disconnette l'utente eliminando il contenuto della sessione
     

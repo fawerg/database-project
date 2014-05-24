@@ -12,7 +12,7 @@
 		<title>Gestione Conti</title>
 	</head>
 	<body>
-		<div class="div-header">BANCHE FOTTI SOLDI - TUTTE INTORNO A VOI</div>
+		<div class="div-header">HOME BANKING - LA BANCA A CASA TUA</div>
 		<table class='table-ext'>
 			<?php
 				include_once('bdlab-lib-fun.php');
