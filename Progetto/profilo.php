@@ -101,6 +101,21 @@
 							print"
 							<meta http-equiv=\"refresh\" content=\"0\">";
 						}
+						if(isset($_POST['mod_c'])){
+							change_surname($_SESSION['isLogged'], $_POST['mod_c'] );
+							print"
+							<meta http-equiv=\"refresh\" content=\"0\">";
+						}
+						if(isset($_POST['mod_a'])){
+							change_address($_SESSION['isLogged'], $_POST['mod_a'] );
+							print"
+							<meta http-equiv=\"refresh\" content=\"0\">";
+						}
+						if(isset($_POST['mod_m'])){
+							change_mail($_SESSION['isLogged'], $_POST['mod_m'] );
+							print"
+							<meta http-equiv=\"refresh\" content=\"0\">";
+						}
 						
 				}
 			?>
