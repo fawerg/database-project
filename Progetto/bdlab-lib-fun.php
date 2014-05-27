@@ -118,6 +118,51 @@ function print_conti_cred($username){
 	return $s;
 }
 
+function change_name($username, $name){
+	$db=connection_pgsql();
+	$sql="UPDATE progetto_db.utente SET nome=$2 WHERE mail=$1";
+	$result= pg_prepare($db, "q", $sql);
+	$value=array($username, $name);
+	$result=pg_execute($db, "q", $value);
+	pg_free_result($result);
+	pg_close($db);
+	
+}
+
+function change_surname($username, $surname){
+	$db=connection_pgsql();
+	$sql="UPDATE progetto_db.utente SET cognome=$2 WHERE mail=$1";
+	$result= pg_prepare($db, "q", $sql);
+	$value=array($username, $surname);
+	$result=pg_execute($db, "q", $value);
+	pg_free_result($result);
+	pg_close($db);
+	
+}
+
+function change_address($username, $address){
+	$db=connection_pgsql();
+	$sql="UPDATE progetto_db.utente SET indirizzo=$2 WHERE mail=$1";
+	$result= pg_prepare($db, "q", $sql);
+	$value=array($username, $address);
+	$result=pg_execute($db, "q", $value);
+	pg_free_result($result);
+	pg_close($db);
+	
+}
+
+function change_mail($username, $mail){
+	$db=connection_pgsql();
+	$sql="UPDATE progetto_db.utente SET mail=$2 WHERE mail=$1";
+	$result= pg_prepare($db, "q", $sql);
+	$value=array($username, $mail);
+	$result=pg_execute($db, "q", $value);
+	$_SESSION['isLogged']=$mail;
+	pg_free_result($result);
+	pg_close($db);
+	
+}
+
 function user_logout() {
 //disconnette l'utente eliminando il contenuto della sessione
     

@@ -9,10 +9,10 @@
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 		<link href="alter-style.css" rel="stylesheet" type="text/css" />
-		<title>Pagina Test</title>
+		<title>Home</title>
 	</head>
 	<body>
-		<div class="div-header">BANCHE FOTTI SOLDI - TUTTE INTORNO A VOI</div>
+		<div class="div-header">HOME BANKING - LA BANCA A CASA TUA</div>
 		<table class='table-ext'>
 			<?php
 				include_once('bdlab-lib-fun.php');
@@ -22,7 +22,7 @@
 							<a href='alter-test.php'>H</a>
 						</td>
 						<td class='td-menu'>
-							<a href='test.html'>Gestione Profilo</a>
+							<a href='profilo.php'>Gestione Profilo</a>
 						</td>
 						<td class='td-menu'>
 							<a href=\"conti.php\">Gestione Conti</a>
@@ -70,7 +70,7 @@
 										<td><input type=\"password\" name=\"pass\" /></td>
 									</tr>
 								</table>
-								<input type=\"submit\" value=\"Login\" />
+								<input type=\"submit\" value=\"Login\"/>    <a href=\"main.php\">Registrati</a>
 							</form>
 						</td>
 					</tr>";
