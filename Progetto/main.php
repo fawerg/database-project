@@ -50,7 +50,7 @@
 							$db = connection_pgsql();
 							
 							$bool = false;
-							$sql = "SELECT mail FROM progetto_db.utente";
+							$sql = "SELECT mail FROM final_db.utente";
 							$result = pg_prepare($db, "q", $sql);
 							$result = pg_execute($db, "q", array());
 							$data = array();
@@ -90,10 +90,10 @@
 								<input type="submit" name="registra" value="Registra" />
 								</form>';
 							} else {
-								$fields = "mail, nome, cognome, indirizzo, pwd";
+								$fields = "mail, nome, cognome, indirizzo, password";
 								$values = array($_POST['mail'], $_POST['nome'], $_POST['cognome'], $_POST['indirizzo'], $_POST['password']);
 		
-								$s = "INSERT INTO progetto_db.utente(".$fields.") VALUES($1, $2, $3, $4, $5);";
+								$s = "INSERT INTO final_db.utente(".$fields.") VALUES($1, $2, $3, $4, $5);";
 							
 								$insres = pg_prepare($db, "i", $s);
 								$insres = pg_execute($db, "i", $values);

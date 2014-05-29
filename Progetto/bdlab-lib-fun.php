@@ -36,7 +36,7 @@ function print_user_data($username){
 	
 	$db = connection_pgsql();
 	
-	$sql = "SELECT nome, cognome, indirizzo, mail FROM progetto_db.utente WHERE mail = $1";
+	$sql = "SELECT nome, cognome, indirizzo, mail FROM final_db.utente WHERE mail = $1";
 	$result = pg_prepare($db, "q", $sql);
 	$value = array($username);
 	$result = pg_execute($db, "q", $value);
@@ -56,7 +56,7 @@ E-mail: ".$row['mail']."
 function print_conti($username){
 	$db = connection_pgsql();
 	
-	$sql= "SELECT iban, tipologia FROM progetto_db.conto WHERE mail = $1";
+	$sql= "SELECT iban, tipologia FROM final_db.conto WHERE mail = $1";
 	$result= pg_prepare($db , "q", $sql);
 	$value = array($username);
 	$result= pg_execute($db, "q", $value);
@@ -76,7 +76,7 @@ function print_conti($username){
 function print_conti_dep($username){
 	$db = connection_pgsql();
 	
-	$sql= "SELECT iban, disponibilita_denaro FROM progetto_db.conto_deposito WHERE mail = $1";
+	$sql= "SELECT iban, ammontare FROM final_db.conto WHERE mail = $1 AND tipologia='Deposito'";
 	$result= pg_prepare($db , "q", $sql);
 	$value = array($username);
 	$result= pg_execute($db, "q", $value);
@@ -85,7 +85,7 @@ function print_conti_dep($username){
 	while($row = pg_fetch_assoc($result)){
 		$s.="<pre>Conto".$i.": 
 			Iban: ".$row['iban']."
-			Disponibilità: ".$row['disponibilita_denaro']."
+			Disponibilità: ".$row['ammontare']."
 		</pre>";
 		$i++;
 	}
@@ -97,7 +97,7 @@ function print_conti_dep($username){
 function print_conti_cred($username){
 	$db = connection_pgsql();
 	
-	$sql= "SELECT iban, disponibilita_denaro,tetto_massimo, iban_deposito FROM progetto_db.conto_credito WHERE mail = $1";
+	$sql= "SELECT iban, ammontare , tetto_max, deposito_riferimento  FROM final_db.conto_credito NATURAL JOIN final_db.conto WHERE mail = $1";
 	$result= pg_prepare($db , "q", $sql);
 	$value = array($username);
 	$result= pg_execute($db, "q", $value);
@@ -106,9 +106,9 @@ function print_conti_cred($username){
 	while($row = pg_fetch_assoc($result)){
 		$s.="<pre>Conto".$i.": 
 			Iban: ".$row['iban']."
-			Disponibilità: ".$row['disponibilita_denaro']."
-			Tetto: ".$row['tetto_massimo']."
-			Iban conto deposito associato: ".$row['iban_deposito']."
+			Disponibilità: ".$row['ammontare']."
+			Tetto: ".$row['tetto_max']."
+			Iban conto deposito associato: ".$row['deposito_riferimento']."
 		</pre>";
 	}
 	pg_free_result($result);
@@ -159,7 +159,7 @@ function lista_iban_deposito($mail){
 
 function change_name($username, $name){
 	$db=connection_pgsql();
-	$sql="UPDATE progetto_db.utente SET nome=$2 WHERE mail=$1";
+	$sql="UPDATE final_db.utente SET nome=$2 WHERE mail=$1";
 	$result= pg_prepare($db, "q", $sql);
 	$value=array($username, $name);
 	$result=pg_execute($db, "q", $value);
@@ -170,7 +170,7 @@ function change_name($username, $name){
 
 function change_surname($username, $surname){
 	$db=connection_pgsql();
-	$sql="UPDATE progetto_db.utente SET cognome=$2 WHERE mail=$1";
+	$sql="UPDATE final_db.utente SET cognome=$2 WHERE mail=$1";
 	$result= pg_prepare($db, "q", $sql);
 	$value=array($username, $surname);
 	$result=pg_execute($db, "q", $value);
@@ -181,7 +181,7 @@ function change_surname($username, $surname){
 
 function change_address($username, $address){
 	$db=connection_pgsql();
-	$sql="UPDATE progetto_db.utente SET indirizzo=$2 WHERE mail=$1";
+	$sql="UPDATE final_db.utente SET indirizzo=$2 WHERE mail=$1";
 	$result= pg_prepare($db, "q", $sql);
 	$value=array($username, $address);
 	$result=pg_execute($db, "q", $value);
@@ -192,7 +192,7 @@ function change_address($username, $address){
 
 function change_mail($username, $mail){
 	$db=connection_pgsql();
-	$sql="UPDATE progetto_db.utente SET mail=$2 WHERE mail=$1";
+	$sql="UPDATE final_db.utente SET mail=$2 WHERE mail=$1";
 	$result= pg_prepare($db, "q", $sql);
 	$value=array($username, $mail);
 	$result=pg_execute($db, "q", $value);
