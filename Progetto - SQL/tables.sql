@@ -11,7 +11,9 @@ CREATE TABLE categoria(
 	nome varchar(20) NOT NULL,
 	tipo char(1) NOT NULL,
 	mail varchar(100) NOT NULL REFERENCES utente(mail) ON UPDATE CASCADE ON DELETE CASCADE,
-	nome_padre varchar(20) REFERENCES categoria(nome) ON UPDATE CASCADE ON DELETE CASCADE,
+	nome_padre varchar(20),
+	mail_padre varchar(100),
+	FOREIGN KEY (nome_padre, mail_padre) REFERENCES categoria(nome, mail) ON UPDATE CASCADE ON DELETE CASCADE,
 	PRIMARY KEY(nome, mail),
 	CHECK (tipo IN ('+', '-'))
 );
