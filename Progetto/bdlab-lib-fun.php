@@ -6,7 +6,7 @@ function user_check($name, $pass) {
 
 	$db = connection_pgsql();
 	
-	$sql = "SELECT pwd FROM progetto_db.utente WHERE mail = $1";
+	$sql = "SELECT password FROM final_db.utente WHERE mail = $1";
 	$result = pg_prepare($db, "q", $sql);
 	$value = array($name);
 	$result = pg_execute($db, "q", $value);
@@ -15,9 +15,7 @@ function user_check($name, $pass) {
 	pg_free_result($result);
 	pg_close($db);
 	
-	print_r ($row);
-	
-	if($row['pwd'] == $pass){
+	if($row['password'] == $pass){
 		$_SESSION['isLogged'] = $name;
 		return true;
 	}
@@ -116,6 +114,47 @@ function print_conti_cred($username){
 	pg_free_result($result);
 	pg_close($db);
 	return $s;
+}
+
+function insert_conto($ammontare, $tetto, $deprif, $mail){
+	$db = connection_pgsql();
+	
+	$string = 'IT';
+	for($i=0; $i<30; $i++)
+		$string .= rand(0, 9);
+	if($tetto != NULL && $deprif != NULL){
+		$sql = "INSERT INTO final_db.conto VALUES ($1, $2, $3, $4)";
+		$result = pg_prepare($db, 'q1', $sql);
+		$value = array($string, $ammontare, 'Credito', $mail);
+		$result = pg_execute($db, 'q1', $value);
+		$sql = "INSERT INTO final_db.conto_credito VALUES ($1, $2, $3)";
+		$result = pg_prepare($db, 'q2', $sql);
+		$value = array($string, $tetto, $deprif);
+		$result = pg_execute($db, 'q2', $value);
+	} else {
+		$sql = "INSERT INTO final_db.conto VALUES ($1, $2, $3, $4)";
+		$result = pg_prepare($db, 'q', $sql);
+		$value = array($string, $ammontare, 'Deposito', $mail);
+		$result = pg_execute($db, 'q', $value);
+	}
+	pg_free_result($result);
+	pg_close($db);
+}
+
+function lista_iban_deposito($mail){
+	$db = connection_pgsql();
+	
+	$sql= "SELECT iban FROM final_db.conto WHERE (mail = $1 AND tipologia = $2)";
+	$result= pg_prepare($db , "q", $sql);
+	$value = array($mail, 'Deposito');
+	$result = pg_execute($db, "q", $value);
+	$string = '';
+	while($row = pg_fetch_assoc($result)){
+		$string .= '<option>'.$row['iban'].'</option>';
+	}
+	pg_free_result($result);
+	pg_close($db);
+	return $string;
 }
 
 function change_name($username, $name){

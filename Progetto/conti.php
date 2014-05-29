@@ -16,7 +16,7 @@
 		<table class='table-ext'>
 			<?php
 				include_once('bdlab-lib-fun.php');
-               			 if ($_SESSION['isLogged']){			
+               		if ($_SESSION['isLogged']){			
 					print "<tr>
 							<td class='td-menu-home'>
 								<a href='alter-test.php'>H</a>
@@ -63,6 +63,9 @@
 								</form>
 							</td>
 						</tr>";
+				}
+				else{
+					header('Location: alter-test.php');
 				}
 			?>
 		</table>

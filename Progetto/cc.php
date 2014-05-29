@@ -16,7 +16,7 @@
 		<table class='table-ext'>
 			<?php
 				include_once('bdlab-lib-fun.php');
-               			 if ($_SESSION['isLogged']){		
+               	if ($_SESSION['isLogged']){		
 					print "	
 						<tr>
 							<td class='td-menu-home'>
@@ -38,7 +38,7 @@
 								<a href=\"logout.php\">Logout</a>
 							</td>
 						</tr>";
-					if(!isset($_POST['continua'])){
+					if(!isset($_POST['continua']) && !isset($_POST['crea'])){
 						print "<tr>
 							<td colspan='6' class='td-containt'>
 								<div class='div-table'>Dettagli Conto</div>
@@ -55,47 +55,56 @@
 						</tr>";
 					}
 					else{
-						if($_POST['tipo']=='Deposito'){
-							print "<tr>
-								<td colspan='6' class='td-containt'>
-									<div class='div-table'>Dettagli Conto</div>
-									<form class='padding-el' method='POST' action='cc.php'>
-										<table>
-											<tr>
-												<td>Ammontare: </td>
-												<td><input type='text' name='ammontare'/></td>
-											</tr>
-										</table>
-										<input type='submit' name='crea' value='Crea conto'>
-									<form>
-								</td>
-							</tr>";
+						if(isset($_POST['tipo'])){
+							if($_POST['tipo']=='Deposito'){
+								print "<tr>
+									<td colspan='6' class='td-containt'>
+										<div class='div-table'>Dettagli Conto</div>
+										<form class='padding-el' method='POST' action='cc.php'>
+											<table>
+												<tr>
+													<td>Ammontare: </td>
+													<td><input type='text' name='ammontare'/></td>
+												</tr>
+											</table>
+											<input type='submit' name='crea' value='Crea conto'>
+										<form>
+									</td>
+								</tr>";
+							}
+							else{
+								print "<tr>
+									<td colspan='6' class='td-containt'>
+										<div class='div-table'>Dettagli Conto</div>
+										<form class='padding-el' method='POST' action='cc.php'>
+											<table>
+												<tr>
+													<td>Ammontare:</td>
+													<td><input type='text' name='ammontare'/></td>
+												</tr>
+												<tr>
+													<td>Tetto:</td>
+													<td><input type='text' name='tetto'/></td>
+												</tr>
+												<tr>
+													<td>Deposito Riferimento:</td>
+													<td><select name='deprif'>".lista_iban_deposito($_SESSION['isLogged'])."</select></td>
+												</tr>
+											</table>
+											<input type='submit' name='crea' value='Crea conto'>
+										<form>
+									</td>
+								</tr>";
+							}
 						}
-						else{
-							print "<tr>
-								<td colspan='6' class='td-containt'>
-									<div class='div-table'>Dettagli Conto</div>
-									<form class='padding-el' method='POST' action='cc.php'>
-										<table>
-											<tr>
-												<td>Ammontare:</td>
-												<td><input type='text' name='ammontare'/></td>
-											</tr>
-											<tr>
-												<td>Tetto:</td>
-												<td><input type='text' name='tetto'/></td>
-											</tr>
-											<tr>
-												<td>Deposito Riferimento:</td>
-												<td><input type='text' name='diprif'/></td>
-											</tr>
-										</table>
-										<input type='submit' name='crea' value='Crea conto'>
-									<form>
-								</td>
-							</tr>";
+						if(isset($_POST['crea'])){
+							(isset($_POST['tetto']) && isset($_POST['deprif'])) ? insert_conto($_POST['ammontare'], $_POST['tetto'], $_POST['deprif'], $_SESSION['isLogged']) : insert_conto($_POST['ammontare'], NULL, NULL, $_SESSION['isLogged']);
+							header('Location: conti.php');
 						}
 					}
+				}
+				else{
+					header('Location: alter-test.php');
 				}
 			?>
 		</table>
