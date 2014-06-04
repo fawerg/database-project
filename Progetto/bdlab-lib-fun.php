@@ -53,6 +53,7 @@ E-mail: ".$row['mail']."
 	return $string;
 
 }
+
 function print_conti($username){
 	$db = connection_pgsql();
 	
@@ -67,6 +68,25 @@ function print_conti($username){
 			Iban: ".$row['iban']."
 			Tipologia: ".$row['tipologia']."</pre>";
 		$i++;
+	}
+	pg_free_result($result);
+	pg_close($db);
+	return $s;
+}
+
+function print_bilanci($username){
+	$db = connection_pgsql();
+	
+	$sql= "SELECT disponibilita, data_scadenza, iban, nome FROM final_db.bilancio NATURAL JOIN final_db.categoria_bilancio WHERE mail = $1";
+	$result= pg_prepare($db , "q", $sql);
+	$value = array($username);
+	$result= pg_execute($db, "q", $value);
+	$s="";
+	while($row = pg_fetch_assoc($result)){
+		$s.="<pre>Disponibilità: ".$row['disponibilita']." 
+			Data Scadenza: ".$row['data_scadenza']."
+			Conto Associato: ".$row['iban']."
+			Usufrutto: ".$row['nome']."</pre>";
 	}
 	pg_free_result($result);
 	pg_close($db);
