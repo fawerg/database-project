@@ -32,7 +32,7 @@
 								<a href=\"transazioni.php\">Gestione Transazioni</a>
 							</td>
 							<td class='td-menu'>
-								<a href=\"test.html\">Gestione Bilanci</a>
+								<a href=\"bilancio.php\">Gestione Bilanci</a>
 							</td>
 							<td class='td-menu'>
 								<a href=\"logout.php\">Logout</a>

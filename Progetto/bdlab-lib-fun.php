@@ -102,7 +102,8 @@ function print_transazioni($username){
 	$result= pg_execute($db, "q", $value);
 	$s="";
 	while($row = pg_fetch_assoc($result)){
-		$s.="<pre>Data: ".$row['data_transazione']." 
+		$s.="<pre>
+			Data: ".$row['data_transazione']." 
 			Iban: ".$row['iban']."
 			Ammontare: ".$row['entita_economica']."
 			Descrizione: ".$row['descrizione']."</pre>";
