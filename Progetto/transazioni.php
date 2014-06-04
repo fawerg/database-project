@@ -9,13 +9,13 @@
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 		<link href="alter-style.css" rel="stylesheet" type="text/css" />
-		<title>Gestione Conti</title>
+		<title>Profilo</title>
 	</head>
 	<body>
 		<div class="div-header">HOME BANKING - LA BANCA A CASA TUA</div>
 		<table class='table-ext'>
 			<?php
-				include_once('bdlab-lib-fun.php');
+			include_once('bdlab-lib-fun.php');
                		if ($_SESSION['isLogged']){			
 					print "<tr>
 							<td class='td-menu-home'>
@@ -37,37 +37,10 @@
 								<a href=\"logout.php\">Logout</a>
 							</td>
 						</tr>
-						<tr>
-		
-							<td colspan='6' class='td-containt'>
-								<div class='div-table'>
-									Conti di deposito: 
-								</div>".print_conti_dep($_SESSION['isLogged'])."
-								
-							
-						
-						
-							
-								<div class='div-table'>
-									Conti di credito: 
-								</div>".print_conti_cred($_SESSION['isLogged'])."
-							
-							</td>
-						</tr>
-						<tr>
-							<td colspan='6' class='td-containt'>
-								<form class=\"padding-el\" method=\"post\" action=\"cc.php\">									
-									
-											<input type=\"submit\" value=\"Crea Nuovo Conto\" />
-										
-								</form>
-							</td>
-						</tr>";
-				}
-				else{
-					header('Location: alter-test.php');
-				}
+						";
+			}
 			?>
+			
 		</table>
 	</body>
 </html>

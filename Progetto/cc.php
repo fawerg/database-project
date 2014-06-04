@@ -29,7 +29,7 @@
 								<a href=\"conti.php\">Gestione Conti</a>
 							</td>
 							<td class='td-menu'>
-								<a href=\"test.html\">Gestione Transazioni</a>
+								<a href=\"transazioni.php\">Gestione Transazioni</a>
 							</td>
 							<td class='td-menu'>
 								<a href=\"test.html\">Gestione Bilanci</a>
