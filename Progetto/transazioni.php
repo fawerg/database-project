@@ -37,8 +37,20 @@
 								<a href=\"logout.php\">Logout</a>
 							</td>
 						</tr>
+						<tr>
+						
+							<td colspan='6' class='td-containt'>
+								<div class='div-table'>
+									Transazioni:
+								</div>".print_transazioni($_SESSION['isLogged'])."
+							</td>
+							
+						</tr>
 						";
 			}
+			else{
+					header('Location: alter-test.php');
+				}
 			?>
 			
 		</table>

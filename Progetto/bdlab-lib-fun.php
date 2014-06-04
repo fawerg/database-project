@@ -93,6 +93,25 @@ function print_bilanci($username){
 	return $s;
 }
 
+function print_transazioni($username){
+	$db = connection_pgsql();
+	
+	$sql= "SELECT * FROM final_db.transazione WHERE mail = $1";
+	$result= pg_prepare($db , "q", $sql);
+	$value = array($username);
+	$result= pg_execute($db, "q", $value);
+	$s="";
+	while($row = pg_fetch_assoc($result)){
+		$s.="<pre>Data: ".$row['data_transazione']." 
+			Iban: ".$row['iban']."
+			Ammontare: ".$row['entita_economica']."
+			Descrizione: ".$row['descrizione']."</pre>";
+	}
+	pg_free_result($result);
+	pg_close($db);
+	return $s;
+}
+
 function print_conti_dep($username){
 	$db = connection_pgsql();
 	

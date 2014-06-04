@@ -15,7 +15,7 @@
 		<div class="div-header">HOME BANKING - LA BANCA A CASA TUA</div>
 		<table class='table-ext'>
 			<?php
-				include_once('bdlab-lib-fun.php');
+			include_once('bdlab-lib-fun.php');
                		if ($_SESSION['isLogged']){			
 					print "<tr>
 							<td class='td-menu-home'>
@@ -117,6 +117,9 @@
 							<meta http-equiv=\"refresh\" content=\"0\">";
 						}
 						
+				}
+				else{
+					header('Location: alter-test.php');
 				}
 			?>
 		</table>
