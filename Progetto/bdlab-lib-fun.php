@@ -163,14 +163,10 @@ function insert_conto($ammontare, $tetto, $deprif, $mail){
 	for($i=0; $i<30; $i++)
 		$string .= rand(0, 9);
 	if($tetto != NULL && $deprif != NULL){
-		$sql = "INSERT INTO final_db.conto VALUES ($1, $2, $3, $4)";
-		$result = pg_prepare($db, 'q1', $sql);
-		$value = array($string, $ammontare, 'Credito', $mail);
-		$result = pg_execute($db, 'q1', $value);
 		$sql = "INSERT INTO final_db.conto_credito VALUES ($1, $2, $3)";
 		$result = pg_prepare($db, 'q2', $sql);
 		$value = array($string, $tetto, $deprif);
-		$result = pg_execute($db, 'q2', $value);
+		$result = pg_execute($db, 'q2', $value);		
 	} else {
 		$sql = "INSERT INTO final_db.conto VALUES ($1, $2, $3, $4)";
 		$result = pg_prepare($db, 'q', $sql);

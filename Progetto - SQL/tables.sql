@@ -45,19 +45,19 @@ CREATE TABLE transazione(
 	CHECK (entita_economica >= 0.00)
 );
 
-CREATE TABLE bilancio(
-	id varchar(8) PRIMARY KEY,
+CREATE TABLE bilancio2(
+	id serial PRIMARY KEY,
 	disponibilita numeric(12, 2) NOT NULL,
 	valore_iniziale numeric(12, 2) NOT NULL,
-	data_inizio date DEFAULT now(),
-	data_scadenza date NOT NULL,
+	data_inizio timestamp DEFAULT now(),
+	data_scadenza timestamp NOT NULL,
 	iban varchar(32) NOT NULL REFERENCES conto(iban) ON UPDATE CASCADE ON DELETE NO ACTION,
 	mail varchar(100) NOT NULL REFERENCES utente(mail) ON UPDATE CASCADE ON DELETE NO ACTION
 	CHECK (valore_iniziale >= 0.00)
 );
 
 CREATE TABLE categoria_bilancio(
-	id varchar(8) NOT NULL REFERENCES bilancio(id) ON UPDATE CASCADE ON DELETE CASCADE,
+	id integer NOT NULL REFERENCES bilancio(id) ON UPDATE CASCADE ON DELETE CASCADE,
 	mail varchar(100) NOT NULL,
 	nome varchar(20) NOT NULL,
 	FOREIGN KEY (mail, nome) REFERENCES categoria(mail, nome) ON UPDATE CASCADE ON DELETE CASCADE,
