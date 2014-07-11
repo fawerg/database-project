@@ -15,10 +15,10 @@ CREATE TRIGGER create_root_categories AFTER INSERT ON utente FOR EACH ROW EXECUT
 CREATE OR REPLACE FUNCTION check_bilancio_user_iban() RETURNS TRIGGER AS $$
 
 DECLARE
-	my_mail conto.mail%TYPE;
+	my_mail final_db.conto.mail%TYPE;
 
 BEGIN
-	SELECT mail INTO my_mail FROM conto WHERE iban = New.iban;
+	SELECT mail INTO my_mail FROM final_db.conto WHERE iban = New.iban;
 	IF(my_mail != NEW.mail) THEN
 		RAISE EXCEPTION 'Conto non associato all utente specificato.';
 	END IF;
@@ -37,7 +37,7 @@ DECLARE
 	my_mail conto.mail%TYPE;
 
 BEGIN
-	SELECT ammontare, mail INTO my_ammontare, my_mail FROM conto WHERE iban = NEW.deposito_riferimento;
+	SELECT ammontare, mail INTO my_ammontare, my_mail FROM final_db.conto WHERE iban = NEW.deposito_riferimento;
 	IF(my_ammontare - NEW.tetto_max < 0) THEN
 		RAISE EXCEPTION 'Errore: fondi insufficienti per creare il conto di credito.';
 	ELSE
@@ -50,3 +50,28 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE TRIGGER cred_dep BEFORE INSERT ON conto_credito FOR EACH ROW EXECUTE PROCEDURE fill_cred_from_dep();
+
+-------------------------------------------------------------
+CREATE OR REPLACE FUNCTION effettua_transazione() RETURNS TRIGGER AS $$
+
+DECLARE
+	my_tipo final_db.categoria.tipo%TYPE;
+	my_ammontare final_db.conto.ammontare%TYPE;
+BEGIN
+	SELECT tipo INTO my_tipo FROM final_db.categoria WHERE nome = NEW.nome;
+	SELECT ammontare INTO my_ammontare FROM final_db.conto WHERE iban = NEW.iban;
+	IF(my_tipo == '-') THEN
+		IF(my_ammontare - NEW.entita_economica < 0) THEN
+			RAISE EXCEPTION 'Errore: fondi insufficienti per effettuare la spesa.';
+		ELSE
+			UPDATE final_db.conto SET ammontare = ammontare - NEW.entita_economica WHERE iban = NEW.iban;
+		END IF;
+	ELSE
+		UPDATE final_db.conto SET ammontare = ammontare + NEW.entita_economica WHERE iban = NEW.iban;
+	END IF;
+	RETURN NEW;
+END;
+
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER conto_transazione BEFORE INSERT ON transazione FOR EACH ROW EXECUTE PROCEDURE effettua_transazione();

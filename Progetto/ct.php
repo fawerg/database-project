@@ -52,7 +52,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td colspan='6' class='td-containt'>
+							<td colspan='7' class='td-containt'>
 								<div class='div-table'>
 									Transazioni:
 								</div>
