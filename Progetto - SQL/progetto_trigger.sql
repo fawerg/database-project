@@ -2,8 +2,8 @@
 CREATE OR REPLACE FUNCTION insert_root_categories() RETURNS TRIGGER AS $$
 
 BEGIN
-	INSERT INTO categoria VALUES ('Spesa', '-', NEW.mail, NULL, NULL);
-	INSERT INTO categoria VALUES ('Entrata', '+', NEW.mail, NULL, NULL);
+	INSERT INTO final_db.categoria VALUES ('Spesa', '-', NEW.mail, NULL, NULL);
+	INSERT INTO final_db.categoria VALUES ('Entrata', '+', NEW.mail, NULL, NULL);
 	RETURN NEW;
 END;
 

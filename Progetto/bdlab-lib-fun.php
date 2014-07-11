@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 include_once('../../conf.php');
   
@@ -166,9 +167,9 @@ function insert_conto($ammontare, $tetto, $deprif, $mail){
 		$string .= rand(0, 9);
 	if($tetto != NULL && $deprif != NULL){
 		$sql = "INSERT INTO final_db.conto_credito VALUES ($1, $2, $3)";
-		$result = pg_prepare($db, 'q2', $sql);
+		$result = pg_prepare($db, 'q', $sql);
 		$value = array($string, $tetto, $deprif);
-		$result = pg_execute($db, 'q2', $value);		
+		$result = pg_execute($db, 'q', $value);		
 	} else {
 		$sql = "INSERT INTO final_db.conto VALUES ($1, $2, $3, $4)";
 		$result = pg_prepare($db, 'q', $sql);
@@ -425,3 +426,4 @@ function connection_pgsql() {
     
 }
 ?>
+
