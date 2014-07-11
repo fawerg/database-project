@@ -179,6 +179,17 @@ function insert_conto($ammontare, $tetto, $deprif, $mail){
 	pg_close($db);
 }
 
+function remove_conto($mail, $iban){
+	$db=connection_pgsql();
+	$sql="DELETE FROM final_db.conto WHERE mail=$1 AND iban=$2";
+	$result=pg_prepare($db, "q", $sql);
+	$value=array($mail, $iban);
+	$result=pg_execute($db, "q", $value);
+	
+	pg_free_result($result);
+	pg_close($db);
+}
+
 function insert_transazione($descrizione, $ammontare, $iban, $mail, $categoria){
 	$db = connection_pgsql();
 
