@@ -337,6 +337,22 @@ function insert_bilancio($disp, $val, $data, $iban, $mail, $categoria){
 	pg_close($db);
 }
 
+function remove_bilancio($mail, $id){
+	$db=connection_pgsql();
+	$sql="DELETE FROM final_db.bilancio WHERE mail=$1 AND id=$2";
+	$result=pg_prepare($db, "q", $sql);
+	$value=array($mail, $id);
+	$result=pg_execute($db, "q", $value);
+	
+	$sql="DELETE FROM final_db.categoria_bilancio WHERE mail=$1 AND id=$2";
+	$result=pg_prepare($db, "p", $sql);
+	$value=array($mail, $id);
+	$result=pg_execute($db, "p", $value);
+	
+	pg_free_result($result);
+	pg_close($db);
+}
+
 function saldo_contabile($mail, $iban, $data1, $data2){
 	$db = connection_pgsql();
 	

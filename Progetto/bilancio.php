@@ -50,17 +50,19 @@
 								</div>
 							</td>
 						</tr>";
-					if(!isset($_POST['Crea'])& !isset($_POST['Invia'])){
+					if(!isset($_POST['Crea'])&& !isset($_POST['Invia'])&& !isset($_POST['del_bilancio']) && !isset($_POST['del_bil_b'])){
 						print
 							"<tr>
 								<td colspan='7' class='td-containt'>
-									<form class='padding-el' method='post' action='bilancio.php'>									
+									<form class='padding-el' method='post' action='bilancio.php'>	
 												<input type='submit' value='Crea Nuovo Bilancio' name='Crea' />
+												<input type='submit' value='Elimina bilancio' name='del_bilancio'/>
 									</form>
 								</td>
 							</tr>";
 					}
 					else{
+						if(!isset($_POST['del_bilancio']) && !isset($_POST['del_bil_b'])){
 							print
 								"<tr>	
 									<td colspan='7' class='td-containt'>
@@ -89,11 +91,25 @@
 									</td>
 								</tr>";
 						}
+						if(isset($_POST['del_bilancio'])){
+						
+							print "<tr><td colspan='7' class='td-containt'>
+								<form class='padding-el' method='post' action='bilancio.php'>
+									Identificativo: <select name='del_id'>".lista_id($_SESSION['isLogged'])."</select>
+									<input type='submit' name='del_bil_b' value='Invia'/>
+								</form>
+							</td></tr>";
+						}
+						if(isset($_POST['del_bil_b'])){
+							remove_bilancio($_SESSION['isLogged'], $_POST['del_id']);
+							header('Location: bilancio.php');
+						}
+					
 						if(isset($_POST['Invia'])){
 							insert_bilancio($_POST['disponibilità'], $_POST['val_iniziale'], $_POST['data_fine'], $_POST['ib_rif'], $_SESSION['isLogged'], $_POST['cat_ref']);
 							header('Location: bilancio.php');
 						}
-					
+					}
 				}
 				else{
 					header('Location: alter-test.php');
