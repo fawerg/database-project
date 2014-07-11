@@ -77,16 +77,17 @@ function print_conti($username){
 function print_bilanci($username){
 	$db = connection_pgsql();
 	
-	$sql= "SELECT disponibilita, data_scadenza, iban, nome FROM final_db.bilancio NATURAL JOIN final_db.categoria_bilancio WHERE mail = $1";
+	$sql= "SELECT id,disponibilita, data_scadenza, iban, nome FROM final_db.bilancio NATURAL JOIN final_db.categoria_bilancio WHERE mail = $1";
 	$result= pg_prepare($db , "q", $sql);
 	$value = array($username);
 	$result= pg_execute($db, "q", $value);
 	$s="";
 	while($row = pg_fetch_assoc($result)){
-		$s.="<pre>Disponibilità: ".$row['disponibilita']." 
-			Data Scadenza: ".$row['data_scadenza']."
-			Conto Associato: ".$row['iban']."
-			Usufrutto: ".$row['nome']."</pre>";
+		$s.="<pre>Identificativo:".$row['id']."
+Disponibilità: ".$row['disponibilita']."
+Data Scadenza: ".$row['data_scadenza']."
+Conto Associato: ".$row['iban']."
+Categoria: ".$row['nome']."</pre>";
 	}
 	pg_free_result($result);
 	pg_close($db);
@@ -102,11 +103,11 @@ function print_transazioni($username){
 	$result= pg_execute($db, "q", $value);
 	$s="";
 	while($row = pg_fetch_assoc($result)){
-		$s.="<pre>
-			Data: ".$row['data_transazione']." 
-			Iban: ".$row['iban']."
-			Ammontare: ".$row['entita_economica']."
-			Descrizione: ".$row['descrizione']."</pre>";
+		$s.="<pre>Data: ".$row['data_transazione']." 
+Iban: ".$row['iban']."
+Ammontare: ".$row['entita_economica']."
+Descrizione: ".$row['descrizione']."
+Categoria: ".$row['nome']."</pre>";
 	}
 	pg_free_result($result);
 	pg_close($db);
@@ -150,6 +151,7 @@ function print_conti_cred($username){
 			Tetto: ".$row['tetto_max']."
 			Iban conto deposito associato: ".$row['deposito_riferimento']."
 		</pre>";
+		$i++;
 	}
 	pg_free_result($result);
 	pg_close($db);
@@ -177,12 +179,61 @@ function insert_conto($ammontare, $tetto, $deprif, $mail){
 	pg_close($db);
 }
 
-function lista_iban_deposito($mail){
+function insert_transazione($descrizione, $ammontare, $iban, $mail, $categoria){
 	$db = connection_pgsql();
+
 	
-	$sql= "SELECT iban FROM final_db.conto WHERE (mail = $1 AND tipologia = $2)";
-	$result= pg_prepare($db , "q", $sql);
-	$value = array($mail, 'Deposito');
+	$sql = "INSERT INTO final_db.transazione (descrizione, entita_economica, iban, mail, nome) VALUES ($1, $2, $3, $4, $5)";
+	$result = pg_prepare($db, 'q', $sql);
+	$value = array($descrizione, $ammontare, $iban, $mail, $categoria);
+	$result = pg_execute($db, 'q', $value);
+		
+	pg_free_result($result);
+	pg_close($db);
+}
+
+function insert_categoria($nome, $tipo, $mail, $padre){
+	$db = connection_pgsql();
+
+	
+	$sql = "INSERT INTO final_db.categoria (nome, tipo, mail, nome_padre, mail_padre) VALUES ($1, $2, $3, $4, $5)";
+	$result = pg_prepare($db, 'q', $sql);
+	if($tipo == "Spesa")
+		$value = array($nome, '-', $mail, $padre, $mail);
+	else
+		$value = array($nome, '+', $mail, $padre, $mail);
+	$result = pg_execute($db, 'q', $value);
+		
+	pg_free_result($result);
+	pg_close($db);
+}
+
+function lista_id($mail){
+	$db = connection_pgsql();
+	$sql= "SELECT id FROM final_db.bilancio WHERE mail=$1";
+ 	$result=pg_prepare($db, "q", $sql);
+ 	$value=array($mail);
+ 	$result=pg_execute($db, "q", $value);
+ 	$string="";
+ 	while($row=pg_fetch_assoc($result)){
+ 		$string.="<option>".$row['id']."</option>";
+ 	}	
+ 	return $string;
+}
+
+
+function lista_iban($mail, $dep_true){
+	$db = connection_pgsql();
+	if($dep_true){
+		$sql= "SELECT iban FROM final_db.conto WHERE (mail = $1 AND tipologia = $2)";
+		$result= pg_prepare($db , "q", $sql);
+		$value = array($mail, 'Deposito');
+	}
+	else{
+		$sql= "SELECT iban FROM final_db.conto WHERE mail = $1";
+		$result= pg_prepare($db , "q", $sql);
+		$value = array($mail);
+	}
 	$result = pg_execute($db, "q", $value);
 	$string = '';
 	while($row = pg_fetch_assoc($result)){
@@ -191,6 +242,33 @@ function lista_iban_deposito($mail){
 	pg_free_result($result);
 	pg_close($db);
 	return $string;
+}
+
+function lista_categorie($mail, $tipo){
+	$db = connection_pgsql();
+	
+	$sql= "SELECT nome FROM final_db.categoria WHERE (mail = $1 AND tipo = $2)";
+	$result= pg_prepare($db , "q", $sql);
+	$value = array($mail, $tipo);
+	$result = pg_execute($db, "q", $value);
+	
+	$string = '';
+	while($row = pg_fetch_assoc($result)){
+		$string .= '<option>'.$row['nome'].'</option>';
+	}
+	
+	pg_free_result($result);
+	pg_close($db);
+	return $string;
+}
+function change_password($mail, $ps ){
+	$db=connection_pgsql();
+	$sql="UPDATE final_db.utente SET password=$2 WHERE mail=$1";
+	$result= pg_prepare($db, "q", $sql);
+	$value=array($mail, $ps);
+	$result=pg_execute($db, "q", $value);
+	pg_free_result($result);
+	pg_close($db);
 }
 
 function change_name($username, $name){
@@ -237,6 +315,83 @@ function change_mail($username, $mail){
 	pg_close($db);
 	
 }
+
+function insert_bilancio($disp, $val, $data, $iban, $mail, $categoria){
+	$db=connection_pgsql();
+	$t='';
+	for($i=0 ; $i<8; $i++){
+		$t.=rand(0,9);
+	}
+
+	$sql= "INSERT INTO final_db.bilancio (id, disponibilita, valore_iniziale, data_scadenza, iban, mail) VALUES ($1, $2, $3, $4, $5, $6)";
+	$result=pg_prepare($db, "q", $sql);
+	$value=array($t, $disp, $val, $data, $iban, $mail );
+	$result= pg_execute($db, "q", $value);
+	pg_free_result($result);
+	
+	$sql1="INSERT INTO final_db.categoria_bilancio VALUES($1, $2, $3)";
+	$result1=pg_prepare($db, "p", $sql1);
+	$value1=array($t,$mail, $categoria );
+	$result1=pg_execute($db, "p", $value1);
+	pg_free_result($result1);
+	pg_close($db);
+}
+
+function saldo_contabile($mail, $iban, $data1, $data2){
+	$db = connection_pgsql();
+	
+	$sql= "CREATE OR REPLACE  VIEW final_db.saldo AS
+			SELECT *
+			FROM final_db.conto NATURAL JOIN final_db.transazione
+			WHERE mail = '".$mail."' AND iban = '".$iban."' AND data_transazione::date >= '".$data1."' AND data_transazione::date <= '".$data2."'
+			ORDER BY data_transazione ASC";
+	$result = pg_prepare($db , "q", $sql);
+	$value = array();
+	$result = pg_execute($db, "q", $value);
+				
+	$sql= "SELECT *
+			FROM final_db.saldo NATURAL JOIN final_db.categoria";
+	$result = pg_prepare($db , "p", $sql);
+	$value = array();
+	$result = pg_execute($db, "p", $value);
+				
+	$string = "";
+	$parziale = 0;
+	while($row = pg_fetch_assoc($result)){
+		$estratto = $row['ammontare'];
+		$string .= "<tr>
+						<td class='td-rapporti'>".date("d-m-Y", strtotime($row['data_transazione']))."</td>
+						<td class='td-rapporti'>".$row['descrizione']."</td>
+						<td class='td-rapporti'>".$row['nome']."</td>
+						<td class='td-rapporti' text-align='right'>".$row['tipo']."</td>
+						<td class='td-rapporti' text-align='right'>".$row['entita_economica']."</td>
+					</tr>";
+		$row['tipo'] == "+" ? $parziale += $row['entita_economica'] : $parziale -= $row['entita_economica'];
+	}
+	$string .= "<tr>
+					<td colspan='3'> Totale Parziale </td>
+					<td class='td-rapporti' text-align='right'>";
+	if($parziale >= 0)
+	  	$string .= "+" ; 
+	else{
+	  	$string .= "-";
+		$parziale -= 2*$parziale;
+	}  	
+	$string .="</td>
+					<td  class='td-rapporti' text-align='right'>".$parziale."</td>
+				</tr>
+				<tr>
+					<td colspan='3'> Estratto Conto Attuale </td>
+					<td class='td-rapporti' text-align='right'> + </td>
+					<td class='td-rapporti' text-align='right'>".$estratto."</td>
+				</tr>";
+				
+	pg_free_result($result);
+	pg_close($db);
+				
+	return $string;			
+}
+
 
 function user_logout() {
 //disconnette l'utente eliminando il contenuto della sessione

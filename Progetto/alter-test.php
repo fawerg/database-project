@@ -34,30 +34,30 @@
 							<a href=\"bilancio.php\">Gestione Bilanci</a>
 						</td>
 						<td class='td-menu'>
+								<a href='rapporti.php'>Rapporti</a>
+						</td>
+						<td class='td-menu'>
 							<a href=\"logout.php\">Logout</a>
 						</td>
+						
 					</tr>
 					<tr>
-						<td colspan='6' class='td-containt'>
+						<td colspan='7' class='td-containt'>
 							<div class='div-table'>Dati Personali</div>
 							".print_user_data($_SESSION['isLogged'])."
 							<div class='div-table'>Conti Aperti</div>
 							<pre>".print_conti($_SESSION['isLogged'])."
 							</pre>
 							<div class='div-table'>Transazioni Effettuate</div>
-							<pre>
- 12/11/2013			-753.45 €
- 17/11/2013			-198.99 €
- 1/12/2013			+1753.76 €
- 12/12/2013			-53.45 €
-							</pre>
+							<pre>".print_transazioni($_SESSION['isLogged'])."</pre>
 							<div class='div-table'>Bilanci Attivi</div>
+							<pre>".print_bilanci($_SESSION['isLogged'])."</pre>
 						</td>
 					</tr>";
 				}
 				else{
 					print "<tr>
-						<td colspan='6' class='td-containt'>
+						<td colspan='7' class='td-containt'>
 							<div class='div-table'>Autenticazione</div>
 							<form class=\"padding-el\" method=\"post\" action=\"check.php\">
 								<table>

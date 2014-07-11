@@ -9,7 +9,7 @@
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 		<link href="alter-style.css" rel="stylesheet" type="text/css" />
-		<title>Profilo</title>
+		<title>Transazioni</title>
 	</head>
 	<body>
 		<div class="div-header">HOME BANKING - LA BANCA A CASA TUA</div>
@@ -34,19 +34,30 @@
 								<a href=\"bilancio.php\">Gestione Bilanci</a>
 							</td>
 							<td class='td-menu'>
+								<a href='rapporti.php'>Rapporti</a>
+							</td>
+							<td class='td-menu'>
 								<a href=\"logout.php\">Logout</a>
 							</td>
 						</tr>
 						<tr>
-						
-							<td colspan='6' class='td-containt'>
+							<td colspan='7' class='td-containt'>
 								<div class='div-table'>
 									Transazioni:
-								</div>".print_transazioni($_SESSION['isLogged'])."
+								</div>
+								<div class='div-scroll'>
+									".print_transazioni($_SESSION['isLogged'])."
+								</div>
 							</td>
-							
 						</tr>
-						";
+						<tr>
+							<td colspan='7' class='td-containt'>
+								<form class='padding-el' method='post' action='ct.php'>									
+									<input type='submit' name='transazione' value='Crea Nuova Transazione' />
+									<input type='submit' name='categoria' value='Crea Nuova Categoria' />
+								</form>
+							</td>
+						</tr>";
 			}
 			else{
 					header('Location: alter-test.php');
