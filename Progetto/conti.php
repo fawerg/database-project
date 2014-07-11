@@ -34,12 +34,16 @@
 								<a href=\"bilancio.php\">Gestione Bilanci</a>
 							</td>
 							<td class='td-menu'>
+								<a href='rapporti.php'>Rapporti</a>
+							</td>
+							<td class='td-menu'>
 								<a href=\"logout.php\">Logout</a>
 							</td>
+							
 						</tr>
 						<tr>
 		
-							<td colspan='6' class='td-containt'>
+							<td colspan='7' class='td-containt'>
 								<div class='div-table'>
 									Conti di deposito: 
 								</div>".print_conti_dep($_SESSION['isLogged'])."
@@ -55,7 +59,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td colspan='6' class='td-containt'>
+							<td colspan='7' class='td-containt'>
 								<form class=\"padding-el\" method=\"post\" action=\"cc.php\">									
 									
 											<input type=\"submit\" value=\"Crea Nuovo Conto\" />

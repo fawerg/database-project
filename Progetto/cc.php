@@ -35,12 +35,33 @@
 								<a href=\"bilancio.php\">Gestione Bilanci</a>
 							</td>
 							<td class='td-menu'>
+								<a href='rapporti.php'>Rapporti</a>
+							</td>
+							<td class='td-menu'>
 								<a href=\"logout.php\">Logout</a>
+							</td>
+							
+						</tr>
+						<tr>
+		
+							<td colspan='7' class='td-containt'>
+								<div class='div-table'>
+									Conti di deposito: 
+								</div>".print_conti_dep($_SESSION['isLogged'])."
+								
+							
+						
+						
+							
+								<div class='div-table'>
+									Conti di credito: 
+								</div>".print_conti_cred($_SESSION['isLogged'])."
+							
 							</td>
 						</tr>";
 					if(!isset($_POST['continua']) && !isset($_POST['crea'])){
 						print "<tr>
-							<td colspan='6' class='td-containt'>
+							<td colspan='7' class='td-containt'>
 								<div class='div-table'>Dettagli Conto</div>
 								<form class=\"padding-el\" method=\"post\" action=\"cc.php\">
 									<table>
@@ -58,7 +79,7 @@
 						if(isset($_POST['tipo'])){
 							if($_POST['tipo']=='Deposito'){
 								print "<tr>
-									<td colspan='6' class='td-containt'>
+									<td colspan='7' class='td-containt'>
 										<div class='div-table'>Dettagli Conto</div>
 										<form class='padding-el' method='POST' action='cc.php'>
 											<table>
@@ -74,7 +95,7 @@
 							}
 							else{
 								print "<tr>
-									<td colspan='6' class='td-containt'>
+									<td colspan='7' class='td-containt'>
 										<div class='div-table'>Dettagli Conto</div>
 										<form class='padding-el' method='POST' action='cc.php'>
 											<table>
@@ -88,7 +109,7 @@
 												</tr>
 												<tr>
 													<td>Deposito Riferimento:</td>
-													<td><select name='deprif'>".lista_iban_deposito($_SESSION['isLogged'])."</select></td>
+													<td><select name='deprif'>".lista_iban($_SESSION['isLogged'], true)."</select></td>
 												</tr>
 											</table>
 											<input type='submit' name='crea' value='Crea conto'>

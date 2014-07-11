@@ -34,12 +34,16 @@
 								<a href=\"bilancio.php\">Gestione Bilanci</a>
 							</td>
 							<td class='td-menu'>
+								<a href='rapporti.php'>Rapporti</a>
+							</td>
+							<td class='td-menu'>
 								<a href=\"logout.php\">Logout</a>
 							</td>
+							
 						</tr>
 						<tr>
 		
-							<td colspan='6' class='td-containt'>
+							<td colspan='7' class='td-containt'>
 								<div class='div-table'>
 									Dati utente: 
 								</div>".print_user_data($_SESSION['isLogged'])."
@@ -47,27 +51,28 @@
 							</td>
 						</tr>
 						";
-						if(!isset($_POST['mod_name']) && !isset($_POST['mod_surname']) && !isset($_POST['mod_address']) && !isset($_POST['mod_mail']) && !isset($_POST['mod_n'])){
+						if(!isset($_POST['mod_name']) && !isset($_POST['mod_surname']) && !isset($_POST['mod_address']) && !isset($_POST['mod_mail']) && !isset($_POST['mod_n'])&& !isset($_POST['mod_pwd']) && !isset($_POST['mod_p'])){
 							print 
 							"<tr>
-								<td colspan='6' class='td-containt'>
-									<form form class=\"padding-el\" method=\"post\" action=\"profilo.php\">
+								<td colspan='7' class='td-containt'>
+									<form class=\"padding-el\" method=\"post\" action=\"profilo.php\">
 										<table>
 											<tr>
 												<td><input type='submit' name='mod_name' value='Modifica Nome'/></td>
-												<td><input type='submit' name ='mod_surname' value='Modifica Cognome'></td>
-												<td><input type='submit' name ='mod_address' value='Modifica Indirizzo'></td>
-												<td><input type='submit' name='mod_mail' value='Modifica Mail' ></td>
+												<td><input type='submit' name ='mod_surname' value='Modifica Cognome'/></td>
+												<td><input type='submit' name ='mod_address' value='Modifica Indirizzo'/></td>
+												<td><input type='submit' name='mod_mail' value='Modifica Mail'/ ></td>
+												<td><input type='submit' name='mod_pwd' value='Modifica Password'/></td>
 											</tr>
 										</table>
 									</form>
 								</td>
 							</tr>";
 						}
-						else{
+						else if(!isset($_POST['mod_p'])){
 							print
 								"<tr>
-								<td colspan='6' class='td-containt'>
+								<td colspan='7' class='td-containt'>
 									<form form class=\"padding-el\" method=\"post\" action=\"profilo.php\">
 										<table>
 											<tr>";
@@ -86,6 +91,13 @@
 								if(isset($_POST['mod_mail'])){
 									print "Nuova Mail: <input type='text' name='mod_m'><input type='submit' value='Continua'>";
 									$n="mail";
+								}
+								if(isset($_POST['mod_pwd'])){
+									print "<pre>
+Nuova Password:    <input type='password' name='mod_p'>
+Conferma Password: <input type='password' name='cmod_p'>
+<input type='submit' value='Continua'></pre>";
+									$n="password";
 								}
 								print"
 												
@@ -113,6 +125,28 @@
 						}
 						if(isset($_POST['mod_m'])){
 							change_mail($_SESSION['isLogged'], $_POST['mod_m'] );
+							print"
+							<meta http-equiv=\"refresh\" content=\"0\">";
+						}
+						if(isset($_POST['mod_p']) && $_POST['cmod_p']!= $_POST['mod_p']){
+								print"<tr>
+								<td colspan='7' class='td-containt'>
+									<form form class=\"padding-el\" method=\"post\" action=\"profilo.php\">
+										<table>
+											<tr>
+<pre>
+Nuova Password:    <input type='password' name='mod_p'>
+Conferma Password: <input type='password' name='cmod_p'> <p style='color:red;'>Errore, password non corrispondenti!</p>
+<input type='submit' value='Continua'></pre>
+											</tr>
+										</table>
+									</form>
+								</td>
+							</tr>";	
+						}
+						
+						if(isset($_POST['mod_p']) && $_POST['cmod_p']== $_POST['mod_p']){
+							change_password($_SESSION['isLogged'], $_POST['mod_p'] );
 							print"
 							<meta http-equiv=\"refresh\" content=\"0\">";
 						}
