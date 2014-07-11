@@ -88,14 +88,10 @@
 							}
 							else{
 								print "<tr>
-									<td colspan='6' class='td-containt'>
+									<td colspan='7' class='td-containt'>
 										<div class='div-table'>Dettagli Conto</div>
 										<form class='padding-el' method='POST' action='cc.php'>
 											<table>
-												<tr>
-													<td>Ammontare:</td>
-													<td><input type='text' name='ammontare'/></td>
-												</tr>
 												<tr>
 													<td>Tetto:</td>
 													<td><input type='text' name='tetto'/></td>
@@ -112,7 +108,7 @@
 							}
 						}
 						if(isset($_POST['crea'])){
-							(isset($_POST['tetto']) && isset($_POST['deprif'])) ? insert_conto($_POST['ammontare'], $_POST['tetto'], $_POST['deprif'], $_SESSION['isLogged']) : insert_conto($_POST['ammontare'], NULL, NULL, $_SESSION['isLogged']);
+							(isset($_POST['tetto']) && isset($_POST['deprif'])) ? insert_conto(NULL, $_POST['tetto'], $_POST['deprif'], $_SESSION['isLogged']) : insert_conto($_POST['ammontare'], NULL, NULL, $_SESSION['isLogged']);
 							header('Location: conti.php');
 						}
 					}

@@ -99,7 +99,6 @@
 								$insres = pg_execute($db, "i", $values);
 								
 								print "<div> Registrazione avvenuta con successo </div>";
-								print "<div> Registrazione avvenuta con successo </div>";
 								sleep (4);
 								
 								header ("Location: alter-test.php");
