@@ -67,24 +67,45 @@ function print_conti($username){
 	return $s;
 }
 
-function print_bilanci($username){
+function print_bilanci($username, $id){
 	$db = connection_pgsql();
 	
-	$sql= "SELECT id,disponibilita, data_scadenza, iban, nome FROM final_db.bilancio NATURAL JOIN final_db.categoria_bilancio WHERE mail = $1";
-	$result= pg_prepare($db , "q", $sql);
-	$value = array($username);
-	$result= pg_execute($db, "q", $value);
-	$s="";
-	while($row = pg_fetch_assoc($result)){
-		$s.="<pre>Identificativo:".$row['id']."
-Disponibilità: ".$row['disponibilita']."
-Data Scadenza: ".$row['data_scadenza']."
-Conto Associato: ".$row['iban']."
-Categoria: ".$row['nome']."</pre>";
+	if($id==NULL){
+		$sql= "SELECT id,disponibilita, data_scadenza, iban, nome FROM final_db.bilancio NATURAL JOIN final_db.categoria_bilancio WHERE mail = $1";
+		$result= pg_prepare($db , "q", $sql);
+		$value = array($username);
+		$result= pg_execute($db, "q", $value);
+		$s="";
+		while($row = pg_fetch_assoc($result)){
+			$s.="<pre>Identificativo:".$row['id']."
+	Disponibilità: ".$row['disponibilita']."
+	Data Scadenza: ".$row['data_scadenza']."
+	Conto Associato: ".$row['iban']."
+	Categoria: ".$row['nome']."</pre>";
+		}
+		pg_free_result($result);
+		
 	}
-	pg_free_result($result);
+	else{
+		$sql1= "SELECT id,disponibilita, data_scadenza, iban, nome FROM final_db.bilancio NATURAL JOIN final_db.categoria_bilancio WHERE mail = $1 AND id=$2";
+		$result1= pg_prepare($db , "l", $sql1);
+		$value1 = array($username, $id);
+		$result1= pg_execute($db, "l", $value1);
+		$s="";
+		while($row = pg_fetch_assoc($result1)){
+			$s.="<pre>Identificativo:".$row['id']."
+	Disponibilità: ".$row['disponibilita']."
+	Data Scadenza: ".$row['data_scadenza']."
+	Conto Associato: ".$row['iban']."
+	Categoria: ".$row['nome']."</pre>";
+		}
+		pg_free_result($result1);
+	}
+	
+	
 	pg_close($db);
 	return $s;
+	
 }
 
 function print_transazioni($username){
@@ -425,14 +446,14 @@ function saldo_bilancio($mail, $id, $d1, $d2){
 	$result = pg_prepare($db , "q", $sql);
 	$value = array();
 	$result = pg_execute($db, "q", $value);
-
+	
 
 	$sql= "SELECT data_transazione,nome,disponibilita, data_inizio, data_scadenza,  descrizione ,tipo,  entita_economica FROM final_db.saldo_bilancio NATURAL JOIN final_db.categoria";
 	$result = pg_prepare($db , "p", $sql);
 	$value = array();
 	$result = pg_execute($db, "p", $value);
 	$string="";
-
+	
 	while($row=pg_fetch_assoc($result)){
 		$string.=	"<tr>
 					<td class='td-rapporti'>".date("d-m-Y", strtotime($row['data_transazione']))."</td>
@@ -445,7 +466,10 @@ function saldo_bilancio($mail, $id, $d1, $d2){
 				$di=$row['data_inizio'];
 				$df=$row['data_scadenza'];
 	}
-	$string.="<tr><td calss='td-rapporti'>Bilancio: </td><td class='td-rapporti'>".$id."</td><td class='td-rapporti'>".$disp."</td><td class='td-rapporti'>".date("d-m-Y", strtotime($di))."</td><td class='td-rapporti'>".date("d-m-Y", strtotime($df))."</td></tr>";
+	pg_free_result($result);
+	pg_close($db);
+	$string.=print_bilanci($mail, $id);
+	
 	return $string;
 }
 
@@ -477,7 +501,7 @@ function update_scheduler(){
 	$result = pg_prepare($db, "insert", $sql);
 	$data = array($date['mday'], $date['mon'], $date['year']);
 	$result = pg_execute($db, "insert", $data);
-	
+	pg_free_result($result);
 	pg_close($db);
 }
 
