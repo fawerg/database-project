@@ -474,7 +474,8 @@ function saldo_bilancio($mail, $id, $d1, $d2){
 }
 
 function percentuale_spesa($mail, $d1, $d2){
-	
+	$db = connection_pgsql();
+	$sql="";
 }
 
 function user_logout() {
