@@ -78,10 +78,10 @@ function print_bilanci($username, $id){
 		$s="";
 		while($row = pg_fetch_assoc($result)){
 			$s.="<pre>Identificativo:".$row['id']."
-	Disponibilità: ".$row['disponibilita']."
-	Data Scadenza: ".$row['data_scadenza']."
-	Conto Associato: ".$row['iban']."
-	Categoria: ".$row['nome']."</pre>";
+Disponibilità: ".$row['disponibilita']."
+Data Scadenza: ".$row['data_scadenza']."
+Conto Associato: ".$row['iban']."
+Categoria: ".$row['nome']."</pre>";
 		}
 		pg_free_result($result);
 		
@@ -94,10 +94,10 @@ function print_bilanci($username, $id){
 		$s="";
 		while($row = pg_fetch_assoc($result1)){
 			$s.="<pre>Identificativo:".$row['id']."
-	Disponibilità: ".$row['disponibilita']."
-	Data Scadenza: ".$row['data_scadenza']."
-	Conto Associato: ".$row['iban']."
-	Categoria: ".$row['nome']."</pre>";
+Disponibilità: ".$row['disponibilita']."
+Data Scadenza: ".$row['data_scadenza']."
+Conto Associato: ".$row['iban']."
+Categoria: ".$row['nome']."</pre>";
 		}
 		pg_free_result($result1);
 	}
@@ -471,6 +471,10 @@ function saldo_bilancio($mail, $id, $d1, $d2){
 	$string.=print_bilanci($mail, $id);
 	
 	return $string;
+}
+
+function percentuale_spesa($mail, $d1, $d2){
+	
 }
 
 function user_logout() {

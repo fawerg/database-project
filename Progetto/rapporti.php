@@ -206,7 +206,59 @@
 								}
 								print"
 							</td>
-						</tr>";;
+						</tr>
+						<tr>
+		
+							<td colspan='7' class='td-containt'>
+								<div class='div-table'>
+									Rapporto su spese di categoria
+								</div>
+								<br>";
+								if(!isset($_POST['per_cat']) && !isset($_POST['Invia_per'])){
+									print"
+									<table>			
+										<tr>
+											<div>
+												Il rapporto su spese di categorie offre un prospetto sulle percentuali di spesa dedicate alle categorie.	
+											</div>
+										</tr>
+										<br>
+										<tr>
+											<form class='padding-el' method='post' action='rapporti.php'>
+												<input type='submit' name='per_cat' value='Richiedi spese percentuali'>
+											</form>
+										
+										</tr>
+
+									</table>";
+								}
+								if(isset($_POST['per_cat'])&& !isset($_POST['Invia_per'])){
+									print"
+									<table>
+										<tr>
+											<form class='padding-el' method='post' action='rapporti.php'>
+												Data di inizio : <input type='date' name='data_inizio'/>
+												Data di fine : <input type='date' name='data_fine' /><br>
+												<input type='submit' name='Invia_per' value='Invia'>
+											</form>
+										
+										</tr>
+									</table>
+									";
+								}
+								if(isset($_POST['Invia_per'])){
+									print"
+									<table width='100%'>
+										<tr>
+											<td class='td-rapporti'>".percentuale_spesa($_SESSION['isLogged'], $_POST['data_inizio'], $_POST['data_fine'])."</td>
+										</tr>
+									</table>"
+									;
+									
+								}
+								print"
+							</td>
+						</tr>";
 			}
 			else{
 					header('Location: alter-test.php');
