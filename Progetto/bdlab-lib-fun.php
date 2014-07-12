@@ -288,6 +288,24 @@ function lista_categorie($mail, $tipo){
 	pg_close($db);
 	return $string;
 }
+
+function lista_categorie_checkbox($mail, $tipo){
+	$db = connection_pgsql();
+	
+	$sql= "SELECT nome FROM final_db.categoria WHERE (mail = $1 AND tipo = $2)";
+	$result= pg_prepare($db , "q", $sql);
+	$value = array($mail, $tipo);
+	$result = pg_execute($db, "q", $value);
+	$string = '';
+	while($row = pg_fetch_assoc($result)){
+		$string .= '<input type="checkbox" name="'.$row['nome'].'" value="'.$row['nome'].'">'.$row['nome'].'</option>';
+	}
+	
+	pg_free_result($result);
+	pg_close($db);
+	return $string;
+}
+
 function change_password($mail, $ps ){
 	$db=connection_pgsql();
 	$sql="UPDATE final_db.utente SET password=$2 WHERE mail=$1";
