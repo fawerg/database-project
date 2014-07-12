@@ -222,6 +222,8 @@ function lista_id($mail){
  	while($row=pg_fetch_assoc($result)){
  		$string.="<option>".$row['id']."</option>";
  	}	
+ 	pg_free_result($result);
+ 	pg_close($db);
  	return $string;
 }
 
@@ -412,6 +414,40 @@ function saldo_contabile($mail, $iban, $data1, $data2){
 	return $string;			
 }
 
+function saldo_bilancio($mail, $id, $d1, $d2){
+	$db = connection_pgsql();
+
+	$sql= "CREATE OR REPLACE  VIEW final_db.saldo_bilancio AS
+			SELECT *
+			FROM final_db.bilancio NATURAL JOIN final_db.categoria_bilancio NATURAL JOIN final_db.transazione
+			WHERE mail = '".$mail."' AND id = '".$id."' AND data_transazione::date >= '".$d1."' AND data_transazione::date <= '".$d2."'
+			ORDER BY data_transazione ASC";
+	$result = pg_prepare($db , "q", $sql);
+	$value = array();
+	$result = pg_execute($db, "q", $value);
+
+
+	$sql= "SELECT data_transazione,nome,disponibilita, data_inizio, data_scadenza,  descrizione ,tipo,  entita_economica FROM final_db.saldo_bilancio NATURAL JOIN final_db.categoria";
+	$result = pg_prepare($db , "p", $sql);
+	$value = array();
+	$result = pg_execute($db, "p", $value);
+	$string="";
+
+	while($row=pg_fetch_assoc($result)){
+		$string.=	"<tr>
+					<td class='td-rapporti'>".date("d-m-Y", strtotime($row['data_transazione']))."</td>
+					<td class='td-rapporti'>".$row['nome']."</td>
+					<td class='td-rapporti'>".$row['descrizione']."</td>
+					<td text-align='right' class='td-rapporti' text-align='right'>".$row['tipo']."</td>
+					<td  class='td-rapporti' text-align='right'>".$row['entita_economica']."</td>
+				</tr>";
+				$disp=$row['disponibilita'];
+				$di=$row['data_inizio'];
+				$df=$row['data_scadenza'];
+	}
+	$string.="<tr><td calss='td-rapporti'>Bilancio: </td><td class='td-rapporti'>".$id."</td><td class='td-rapporti'>".$disp."</td><td class='td-rapporti'>".date("d-m-Y", strtotime($di))."</td><td class='td-rapporti'>".date("d-m-Y", strtotime($df))."</td></tr>";
+	return $string;
+}
 
 function user_logout() {
 //disconnette l'utente eliminando il contenuto della sessione
