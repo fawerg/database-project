@@ -46,7 +46,7 @@
 									Bilanci: 
 								</div>
 								<div class='div-scroll'>
-									".print_bilanci($_SESSION['isLogged'])."
+									".print_bilanci($_SESSION['isLogged'], NULL)."
 								</div>
 							</td>
 						</tr>";
