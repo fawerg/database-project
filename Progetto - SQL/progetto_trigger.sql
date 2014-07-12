@@ -77,19 +77,27 @@ $$ LANGUAGE 'plpgsql';
 CREATE TRIGGER conto_transazione BEFORE INSERT ON transazione FOR EACH ROW EXECUTE PROCEDURE effettua_transazione();
 
 ---------------------------------------------------------------------
-CREATE OR REPLACE FUNCTION update_conti_credito RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION update_conti_credito() RETURNS TRIGGER AS $$
 
 DECLARE
 	my_mese final_db.scheduler.mese%TYPE;
+	my_credito final_db.conto.iban%TYPE;
+	my_ammontare final_db.conto.ammontare%TYPE;
+	my_tetto final_db.conto_credito.tetto_max%TYPE;
+	my_deposito final_db.conto_credito.deposito_riferimento%TYPE;
 BEGIN
 	SELECT mese INTO my_mese FROM final_db.scheduler WHERE id = '0';
 	IF(my_mese < NEW.mese) THEN
-		
+		FOR my_credito, my_ammontare, my_tetto, my_deposito IN SELECT iban, ammontare, tetto_max, deposito_riferimento FROM final_db.conto NATURAL JOIN final_db.conto_credito
+		LOOP
+			UPDATE final_db.conto SET ammontare = ammontare - my_tetto - my_ammontare WHERE iban = my_deposito;
+			UPDATE final_db.conto SET ammontare = my_tetto WHERE iban = my_credito;
+		END LOOP;
 	END IF;
 	RETURN NEW;
 END;
 
 $$ LANGUAGE 'plpgsql';
 
-CREATE TRIGGER update_conti BEFORE INSERT ON scheduler FOR EACH ROW EXECUTE PROCEDURE update_conti_credito();
+CREATE TRIGGER update_conti AFTER INSERT ON scheduler FOR EACH ROW EXECUTE PROCEDURE update_conti_credito();
 
