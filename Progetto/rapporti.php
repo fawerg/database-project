@@ -146,7 +146,67 @@
 								}
 								print"
 							</td>
-						</tr>";
+						</tr>
+						<tr>
+		
+							<td colspan='7' class='td-containt'>
+								<div class='div-table'>
+									Rapporto su confonto di bilanci 
+								</div>
+								<br>";
+								if(!isset($_POST['saldo_c']) && !isset($_POST['Invia_c'])){
+									print"
+									<table>			
+										<tr>
+											<div>
+												Il rapporto su confronto di diversi bilancii offre un paragone di spesa su differenti bilanci.	
+											</div>
+										</tr>
+										<br>
+										<tr>
+											<form class='padding-el' method='post' action='rapporti.php'>
+												<input type='submit' name='saldo_c' value='Richiedi confronto bilancii'>
+											</form>
+										
+										</tr>
+
+									</table>";
+								}
+								if(isset($_POST['saldo_c'])&& !isset($_POST['Invia_c'])){
+									print"
+									<table>
+										<tr>
+											<form class='padding-el' method='post' action='rapporti.php'>
+												Identificativo1: <select name='id1'>".lista_id($_SESSION['isLogged'])."</select>
+												Identificativo2: <select name ='id2' >".lista_id($_SESSION['isLogged'])."</select>
+												Data di inizio : <input type='date' name='data_inizio'/>
+												Data di fine : <input type='date' name='data_fine' /><br>
+												<input type='submit' name='Invia_c' value='Invia'>
+											</form>
+										
+										</tr>
+									</table>
+									";
+								}
+								if(isset($_POST['Invia_c'])){
+									print"
+									<table width='100%'>
+										<tr>
+											<td class='td-rapporti'>Data transazione(gg/mm/yy)</td><td class='td-rapporti'>Descrizione</td><td class='td-rapporti'>Categoria</td><td class='td-rapporti'></td><td class='td-rapporti'>Entità economica (€)</td>
+										</tr>"
+										.saldo_bilancio($_SESSION['isLogged'], $_POST['id1'], $_POST['data_inizio'], $_POST['data_fine']).
+									"</table>
+									<table width='100%'>
+										<tr>
+											<td class='td-rapporti'>Data transazione(gg/mm/yy)</td><td class='td-rapporti'>Descrizione</td><td class='td-rapporti'>Categoria</td><td class='td-rapporti'></td><td class='td-rapporti'>Entità economica (€)</td>
+										</tr>"
+										.saldo_bilancio($_SESSION['isLogged'], $_POST['id2'], $_POST['data_inizio'], $_POST['data_fine']).
+									"</table>";
+									
+								}
+								print"
+							</td>
+						</tr>";;
 			}
 			else{
 					header('Location: alter-test.php');

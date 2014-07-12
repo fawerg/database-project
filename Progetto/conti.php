@@ -49,14 +49,43 @@
 									Conti di credito: 
 								</div>".print_conti_cred($_SESSION['isLogged'])."
 							</td>
-						</tr>
-						<tr>
-							<td colspan='7' class='td-containt'>
-								<form class='padding-el' method='post' action='cc.php'>									
-									<input type='submit' value='Crea Nuovo Conto' />
-								</form>
-							</td>
 						</tr>";
+						if(!isset($_POST['delete'])&&!isset($_POST['del_ib'])){
+							print"
+							<tr>
+								<td colspan='7' class='td-containt'>
+									<form class='padding-el' method='post' action='cc.php'>									
+										<input type='submit' value='Crea Nuovo Conto' />
+									</form>
+									<form class='padding-el' method='post' action='conti.php'>
+										<input type='submit' value='Elimina conto' name='delete'>
+									</form>
+								</td>
+							</tr>
+							<tr>
+								<td colspan='7' class='td-containt'>
+								<div style='color:red;'>
+									**Non è possibile eliminare un conto di deposito se è collegato a un conto di credito, in questi casi bisogna prima procedere alla chiusura del conto di credito sopracitato.
+								</div>
+								</td>
+							</tr>";
+						}
+						if(isset($_POST['delete'])&&!isset($_POST['del_ib'])){
+							print"
+							<tr>
+								<td colspan ='7' class='td-containt'>
+									<form class='padding-el' method='post' action='conti.php'>
+										Iban: <select name='ib_del'>".lista_iban($_SESSION['isLogged'], false)."</select>
+										<input type='submit' name='del_ib' value='Invia'/>
+									</form>
+								</td>
+							</tr>
+							";
+						}
+						if(isset($_POST['del_ib'])){
+							remove_conto($_SESSION['isLogged'], $_POST['ib_del']);
+							header('Location: conti.php');
+						}
 				}
 				else{
 					header('Location: alter-test.php');
