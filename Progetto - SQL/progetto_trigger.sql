@@ -75,3 +75,21 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE TRIGGER conto_transazione BEFORE INSERT ON transazione FOR EACH ROW EXECUTE PROCEDURE effettua_transazione();
+
+---------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION update_conti_credito RETURNS TRIGGER AS $$
+
+DECLARE
+	my_mese final_db.scheduler.mese%TYPE;
+BEGIN
+	SELECT mese INTO my_mese FROM final_db.scheduler WHERE id = '0';
+	IF(my_mese < NEW.mese) THEN
+		
+	END IF;
+	RETURN NEW;
+END;
+
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER update_conti BEFORE INSERT ON scheduler FOR EACH ROW EXECUTE PROCEDURE update_conti_credito();
+

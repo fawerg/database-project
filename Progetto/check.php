@@ -1,10 +1,10 @@
 <?php
-	ini_set('display_errors','Off');
+	ini_set('display_errors','On');
 	session_start();
 	include_once('bdlab-lib-fun.php');
 	
-	if (user_check($_POST['user'], $_POST['pass'])) {
-		header ("Location: alter-test.php");}
-	else
+	if (user_check($_POST['user'], $_POST['pass'])){
+		header ("Location: alter-test.php");
+	}else
 		header ("Location: alter-test.php?failed=true");               
 ?>
