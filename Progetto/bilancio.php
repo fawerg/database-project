@@ -81,7 +81,7 @@
 													<td>Iban Riferimento: </td><td><select name='ib_rif'>".lista_iban($_SESSION['isLogged'], false)."</select></td>
 												</tr>
 												<tr>
-													<td>Categoria di bilancio: </td><td><select name='cat_ref'>".lista_categorie($_SESSION['isLogged'], "-")."</select></td>
+													<td>Categoria di bilancio: </td><td>".lista_categorie_checkbox($_SESSION['isLogged'], "-")."</td>
 												</tr>
 												<tr>
 													<td><input type='submit' name='Invia' value='Crea'/></td>
