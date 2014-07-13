@@ -424,8 +424,8 @@ function saldo_contabile($mail, $iban, $data1, $data2){
 						<td class='td-rapporti'>".date("d-m-Y", strtotime($row['data_transazione']))."</td>
 						<td class='td-rapporti'>".$row['descrizione']."</td>
 						<td class='td-rapporti'>".$row['nome']."</td>
-						<td class='td-rapporti' text-align='right'>".$row['tipo']."</td>
-						<td class='td-rapporti' text-align='right'>".$row['entita_economica']."</td>
+						<td class='td-rapporti' align='right'>".$row['tipo']."</td>
+						<td class='td-rapporti' align='right'>".$row['entita_economica']."</td>
 					</tr>";
 		$row['tipo'] == "+" ? $parziale += $row['entita_economica'] : $parziale -= $row['entita_economica'];
 	}
@@ -477,7 +477,7 @@ function saldo_bilancio($mail, $id, $d1, $d2){
 					<td class='td-rapporti'>".date("d-m-Y", strtotime($row['data_transazione']))."</td>
 					<td class='td-rapporti'>".$row['nome']."</td>
 					<td class='td-rapporti'>".$row['descrizione']."</td>
-					<td text-align='right' class='td-rapporti' text-align='right'>".$row['tipo']."</td>
+					<td align='right' class='td-rapporti' align='right'>".$row['tipo']."</td>
 					<td  class='td-rapporti' text-align='right'>".$row['entita_economica']."</td>
 				</tr>";
 				$disp=$row['disponibilita'];
@@ -501,10 +501,10 @@ function percentuale_spesa($mail, $d1, $d2){
 	$value=array();
 	$result= pg_execute($db, "q", $value);
 	
-	$sql= "SELECT nome, SUM(entita_economica)
+	$sql= "SELECT nome,iban, SUM(entita_economica)
 		FROM final_db.spese_globali
 		WHERE tipo='-'
-		GROUP BY nome";
+		GROUP BY nome, iban";
 	$result=pg_prepare($db, "p", $sql);
 	$value=array();
 	$result=pg_execute($db, "p", $value);
@@ -512,26 +512,30 @@ function percentuale_spesa($mail, $d1, $d2){
 	while($row=pg_fetch_assoc($result)){
 		$string.="
 				<tr>
-					<td >".$row['nome']."</td>
-					<td>-</td>
-					<td>".$row['sum']."</td>
+					<td class='td-rapporti'>".$row['iban']."</td>
+					<td class='td-rapporti'>".$row['nome']."</td>
+					<td></td>
+					<td align='right'>-</td>
+					<td class='td-rapporti'>".$row['sum']."</td>
 				</tr>
 			";
 	}
 	pg_free_result($result);
-	$sql= "SELECT nome, SUM(entita_economica)
+	$sql= "SELECT nome, iban, SUM(entita_economica)
 		FROM final_db.spese_globali
 		WHERE tipo='+'
-		GROUP BY nome";
+		GROUP BY nome,iban";
 	$result=pg_prepare($db, "l", $sql);
 	$value=array();
 	$result=pg_execute($db, "l", $value);
 	while($row=pg_fetch_assoc($result)){
 		$string.="
 				<tr>
-					<td >".$row['nome']."</td>
-					<td>+</td>
-					<td>".$row['sum']."</td>
+					<td class='td-rapporti'>".$row['iban']."</td>
+					<td class='td-rapporti'>".$row['nome']."</td>
+					<td></td>
+					<td align='right'>+</td>
+					<td class='td-rapporti'>".$row['sum']."</td>
 				</tr>
 			";
 	}
