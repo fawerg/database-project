@@ -9,7 +9,7 @@
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 		<link href="alter-style.css" rel="stylesheet" type="text/css" />
-		<title>Pagina Test</title>
+		<title>Registrazione</title>
 	</head>
 	<body>
 		<div class="div-header">PAGINA DI REGISTRAZIONE</div>
@@ -62,8 +62,10 @@
 								$data[] = $row;
 							}
 							
-							if($bool){
-								print '<div color="red"> Utente già presente, reinserire dati </div> 
+							if($bool || strlen($_POST['password']) < 8 || strlen($_POST['password']) > 8){
+								print '<div style="color: red;">';
+								$bool ? print 'Utente già presente, reinserire dati' : print 'Errore password: la lunghezza deve essere tra 8 e 16 caratteri';
+								print '</div> 
 								<form class="padding-el" method="POST" action="main.php">
 								<table>
 									<tr>
