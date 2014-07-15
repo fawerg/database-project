@@ -250,6 +250,8 @@
 									print"
 									<table width='100%'>
 										<tr>
+											<td class='td-rapporti'>Iban</td><td class='td-rapporti'>Nome categoria</td><td class='td-rapporti'></td><td class='td-rapporti'></td><td class='td-rapporti'>Somma entrate/spese</td>
+										</tr>
 											<td class='td-rapporti'>".percentuale_spesa($_SESSION['isLogged'], $_POST['data_inizio'], $_POST['data_fine'])."</td>
 										</tr>
 									</table>"

@@ -125,7 +125,7 @@ Categorie:";
 function print_transazioni($username){
 	$db = connection_pgsql();
 	
-	$sql= "SELECT * FROM final_db.transazione WHERE mail = $1";
+	$sql= "SELECT data_transazione, iban, entita_economica, descrizione, nome, tipo FROM final_db.transazione NATURAL JOIN final_db.categoria WHERE mail = $1";
 	$result= pg_prepare($db , "q", $sql);
 	$value = array($username);
 	$result= pg_execute($db, "q", $value);
@@ -133,7 +133,7 @@ function print_transazioni($username){
 	while($row = pg_fetch_assoc($result)){
 		$s.="<pre>Data: ".$row['data_transazione']." 
 Iban: ".$row['iban']."
-Ammontare: ".$row['entita_economica']."
+Ammontare: ".$row['tipo']."".$row['entita_economica']."
 Descrizione: ".$row['descrizione']."
 Categoria: ".$row['nome']."</pre>";
 	}
@@ -442,8 +442,8 @@ function saldo_contabile($mail, $iban, $data1, $data2){
 						<td class='td-rapporti'>".date("d-m-Y", strtotime($row['data_transazione']))."</td>
 						<td class='td-rapporti'>".$row['descrizione']."</td>
 						<td class='td-rapporti'>".$row['nome']."</td>
-						<td class='td-rapporti' text-align='right'>".$row['tipo']."</td>
-						<td class='td-rapporti' text-align='right'>".$row['entita_economica']."</td>
+						<td class='td-rapporti' align='right'>".$row['tipo']."</td>
+						<td class='td-rapporti' align='right'>".$row['entita_economica']."</td>
 					</tr>";
 		$row['tipo'] == "+" ? $parziale += $row['entita_economica'] : $parziale -= $row['entita_economica'];
 	}
@@ -495,7 +495,7 @@ function saldo_bilancio($mail, $id, $d1, $d2){
 					<td class='td-rapporti'>".date("d-m-Y", strtotime($row['data_transazione']))."</td>
 					<td class='td-rapporti'>".$row['nome']."</td>
 					<td class='td-rapporti'>".$row['descrizione']."</td>
-					<td text-align='right' class='td-rapporti' text-align='right'>".$row['tipo']."</td>
+					<td align='right' class='td-rapporti' align='right'>".$row['tipo']."</td>
 					<td  class='td-rapporti' text-align='right'>".$row['entita_economica']."</td>
 				</tr>";
 				$disp=$row['disponibilita'];
@@ -511,7 +511,56 @@ function saldo_bilancio($mail, $id, $d1, $d2){
 
 function percentuale_spesa($mail, $d1, $d2){
 	$db = connection_pgsql();
-	$sql="";
+	$sql="CREATE OR REPLACE VIEW final_db.spese_globali AS
+		SELECT *
+		FROM final_db. categoria NATURAL JOIN final_db.transazione
+		WHERE mail='".$mail."' AND data_transazione::date>='".$d1."' AND data_transazione::date<= '".$d2."'";
+	$result=pg_prepare($db, "q", $sql);
+	$value=array();
+	$result= pg_execute($db, "q", $value);
+	
+	$sql= "SELECT nome,iban, SUM(entita_economica)
+		FROM final_db.spese_globali
+		WHERE tipo='-'
+		GROUP BY nome, iban";
+	$result=pg_prepare($db, "p", $sql);
+	$value=array();
+	$result=pg_execute($db, "p", $value);
+	$string="";
+	while($row=pg_fetch_assoc($result)){
+		$string.="
+				<tr>
+					<td class='td-rapporti'>".$row['iban']."</td>
+					<td class='td-rapporti'>".$row['nome']."</td>
+					<td></td>
+					<td align='right'>-</td>
+					<td class='td-rapporti'>".$row['sum']."</td>
+				</tr>
+			";
+	}
+	pg_free_result($result);
+	$sql= "SELECT nome, iban, SUM(entita_economica)
+		FROM final_db.spese_globali
+		WHERE tipo='+'
+		GROUP BY nome,iban";
+	$result=pg_prepare($db, "l", $sql);
+	$value=array();
+	$result=pg_execute($db, "l", $value);
+	while($row=pg_fetch_assoc($result)){
+		$string.="
+				<tr>
+					<td class='td-rapporti'>".$row['iban']."</td>
+					<td class='td-rapporti'>".$row['nome']."</td>
+					<td></td>
+					<td align='right'>+</td>
+					<td class='td-rapporti'>".$row['sum']."</td>
+				</tr>
+			";
+	}
+	pg_free_result($result);
+	pg_close($db);
+	return $string;
+	
 }
 
 function user_logout() {
