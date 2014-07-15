@@ -49,17 +49,48 @@
 									".print_transazioni($_SESSION['isLogged'])."
 								</div>
 							</td>
-						</tr>
-						<tr>
-							<td colspan='7' class='td-containt'>
-								<form class='padding-el' method='post' action='ct.php'>									
-									<input type='submit' name='transazione' value='Crea Nuova Transazione' />
-								</form>
-								<form class='padding-el' method='post' action='ccat.php'>
-									<input type='submit' name='categoria' value='Crea Nuova Categoria' />
-								</form>
-							</td>
 						</tr>";
+						if(!isset($_POST['prog'])){
+							print"
+							<tr>
+								<td colspan='7' class='td-containt'>
+									<form class='padding-el' method='post' action='ct.php'>									
+										<input type='submit' name='transazione' value='Crea Nuova Transazione' />
+									</form>
+									<form class='padding-el' method='post' action='ccat.php'>
+										<input type='submit' name='categoria' value='Crea Nuova Categoria' />
+									</form>
+									<form class='padding-el' method='post' action='transazioni.php'>
+										<input type='submit' name='prog' value='Crea transazione programmata'>
+									</form>
+								</td>
+							</tr>";
+						}
+						if(isset($_POST['prog'])){
+							print"
+							<tr>
+								<td colspan='7' class='td-containt'>
+									<form name='frmMain' method='post'> 
+										<table>
+											<tr>
+												<td colspan='7' >
+												Date: <input type='text' name='txtDate' value='mm/dd/yyyy' size='15' maxlength='10'>  
+												<input type='button' name='cmdCal' value='Calendario' onClick=\"javascript:window.open('calendar.php?form=frmMain & field=txtDate','',' top=50 , left=400 , width=175, height=140, menubar=no, toolbar=no ,scrollbars=no ,resizable=yes,status=no'); return false;\"> 
+												</td>
+												
+											</tr>
+											<tr>
+												<td colspas='7' >
+													<input type='submit' name='crea' value='Invia'>
+												</td>
+											</tr>
+										</table>
+									</form> 
+								</td>
+							</tr>
+							";
+
+						}
 			}
 			else{
 					header('Location: alter-test.php');

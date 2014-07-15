@@ -97,7 +97,7 @@ Categorie:";
 		$value1 = array($username, $id);
 		$result1= pg_execute($db, "l", $value1);
 		$s="";
-		$row = pg_fetch_assoc($result);
+		$row = pg_fetch_assoc($result1);
 		while($row){
 			$id = $row['id'];
 			$s.="<pre>Identificativo:".$row['id']."
@@ -107,7 +107,7 @@ Conto Associato: ".$row['iban']."
 Categorie:";
 			while($id == $row['id']){
 				$s .= " ".$row['nome'];
-				$row = pg_fetch_assoc($result);
+				$row = pg_fetch_assoc($result1);
 			}
 			$s .= "</pre>";
 		}
@@ -465,6 +465,7 @@ function saldo_contabile($mail, $iban, $data1, $data2){
 				
 	$string = "";
 	$parziale = 0;
+	$estratto=0;
 	while($row = pg_fetch_assoc($result)){
 		$estratto = $row['ammontare'];
 		$string .= "<tr>
