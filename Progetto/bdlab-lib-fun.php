@@ -11,13 +11,11 @@ function user_check($name, $pass) {
 	$value = array($name);
 	$result = pg_execute($db, "q", $value);
 	$row = pg_fetch_assoc($result);
-	
+
 	pg_free_result($result);
 	pg_close($db);
 	
-	update_scheduler();
-	
-	if($row['password'] == $pass){
+	if($row['password'] == $pass && !(strlen($pass) == 0)){
 		$_SESSION['isLogged'] = $name;
 		return true;
 	}
@@ -71,17 +69,24 @@ function print_bilanci($username, $id){
 	$db = connection_pgsql();
 	
 	if($id==NULL){
-		$sql= "SELECT id,disponibilita, data_scadenza, iban, nome FROM final_db.bilancio NATURAL JOIN final_db.categoria_bilancio WHERE mail = $1";
+		$sql= "SELECT id, disponibilita, data_scadenza, iban, nome FROM final_db.bilancio NATURAL JOIN final_db.categoria_bilancio WHERE mail = $1";
 		$result= pg_prepare($db , "q", $sql);
 		$value = array($username);
-		$result= pg_execute($db, "q", $value);
-		$s="";
-		while($row = pg_fetch_assoc($result)){
+		$result = pg_execute($db, "q", $value);
+		$s = "";
+		$row = pg_fetch_assoc($result);
+		while($row){
+			$id = $row['id'];
 			$s.="<pre>Identificativo:".$row['id']."
 Disponibilità: ".$row['disponibilita']."
 Data Scadenza: ".$row['data_scadenza']."
 Conto Associato: ".$row['iban']."
-Categoria: ".$row['nome']."</pre>";
+Categorie:";
+			while($id == $row['id']){
+				$s .= " ".$row['nome'];
+				$row = pg_fetch_assoc($result);
+			}
+			$s .= "</pre>";
 		}
 		pg_free_result($result);
 		
@@ -92,12 +97,19 @@ Categoria: ".$row['nome']."</pre>";
 		$value1 = array($username, $id);
 		$result1= pg_execute($db, "l", $value1);
 		$s="";
-		while($row = pg_fetch_assoc($result1)){
+		$row = pg_fetch_assoc($result);
+		while($row){
+			$id = $row['id'];
 			$s.="<pre>Identificativo:".$row['id']."
 Disponibilità: ".$row['disponibilita']."
 Data Scadenza: ".$row['data_scadenza']."
 Conto Associato: ".$row['iban']."
-Categoria: ".$row['nome']."</pre>";
+Categorie:";
+			while($id == $row['id']){
+				$s .= " ".$row['nome'];
+				$row = pg_fetch_assoc($result);
+			}
+			$s .= "</pre>";
 		}
 		pg_free_result($result1);
 	}
@@ -297,6 +309,7 @@ function lista_categorie_checkbox($mail, $tipo){
 	$value = array($mail, $tipo);
 	$result = pg_execute($db, "q", $value);
 	$string = '';
+	$i = 4;
 	while($row = pg_fetch_assoc($result)){
 		$string .= '<input type="checkbox" name="'.$row['nome'].'" value="'.$row['nome'].'">'.$row['nome'].'</option>';
 	}
@@ -361,7 +374,7 @@ function change_mail($username, $mail){
 	
 }
 
-function insert_bilancio($disp, $val, $data, $iban, $mail, $categoria){
+function insert_bilancio($disp, $val, $data, $iban, $mail, $categorie){
 	$db=connection_pgsql();
 	$t='';
 	for($i=0 ; $i<8; $i++){
@@ -374,11 +387,14 @@ function insert_bilancio($disp, $val, $data, $iban, $mail, $categoria){
 	$result= pg_execute($db, "q", $value);
 	pg_free_result($result);
 	
-	$sql1="INSERT INTO final_db.categoria_bilancio VALUES($1, $2, $3)";
-	$result1=pg_prepare($db, "p", $sql1);
-	$value1=array($t,$mail, $categoria );
-	$result1=pg_execute($db, "p", $value1);
-	pg_free_result($result1);
+	for($i=0; $i<count($categorie); $i++){
+		$sql = "INSERT INTO final_db.categoria_bilancio VALUES($1, $2, $3)";
+		$result = pg_prepare($db, "p".$i, $sql);
+		$value = array($t, $mail, $categorie[$i]);
+		$result = pg_execute($db, "p".$i, $value);
+		pg_free_result($result);
+	}
+	
 	pg_close($db);
 }
 
@@ -550,31 +566,6 @@ function user_logout() {
     
     unset ($_SESSION['isLogged']);
 
-}
-
-function update_scheduler(){
-	$db = connection_pgsql();
-
-	$sql = "DELETE FROM final_db.scheduler WHERE id = '0'";
-	print $sql."\n";
-	$result = pg_prepare($db, "delete", $sql);
-	$data = array();
-	$result = pg_execute($db, "delete", $data);
-	
-	$sql = "UPDATE final_db.scheduler SET id = '0' WHERE id = '1'";
-	print $sql."\n";
-	$result = pg_prepare($db, "update", $sql);
-	$data = array();
-	$result = pg_execute($db, "update", $data);
-	
-	$date = getdate();
-	$sql = "INSERT INTO final_db.scheduler VALUES ('1', $1, $2, $3)";
-	print $sql."\n";
-	$result = pg_prepare($db, "insert", $sql);
-	$data = array($date['mday'], $date['mon'], $date['year']);
-	$result = pg_execute($db, "insert", $data);
-	pg_free_result($result);
-	pg_close($db);
 }
 
 function connection_pgsql() {

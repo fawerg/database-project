@@ -3,8 +3,8 @@
 	session_start();
 	include_once('bdlab-lib-fun.php');
 	
-	if (user_check($_POST['user'], $_POST['pass'])){
+	if(user_check($_POST['user'], $_POST['pass']))
 		header ("Location: alter-test.php");
-	}else
+	else
 		header ("Location: alter-test.php?failed=true");               
 ?>
