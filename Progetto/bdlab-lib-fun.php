@@ -11,11 +11,11 @@ function user_check($name, $pass) {
 	$value = array($name);
 	$result = pg_execute($db, "q", $value);
 	$row = pg_fetch_assoc($result);
-	
+
 	pg_free_result($result);
 	pg_close($db);
 	
-	if($row['password'] == $pass){
+	if($row['password'] == $pass && !(strlen($pass) == 0)){
 		$_SESSION['isLogged'] = $name;
 		return true;
 	}
