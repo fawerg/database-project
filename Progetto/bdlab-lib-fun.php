@@ -184,12 +184,33 @@ function print_conti_cred($username){
 	return $s;
 }
 
+function random_n($n){
+	$string="";
+	$i=$n;
+	while($i>0){
+		$string.=rand(0, 9);
+		$i--;
+	}
+	return $string;
+}
+
 function insert_conto($ammontare, $tetto, $deprif, $mail){
 	$db = connection_pgsql();
-	
+	$bool=true;
 	$string = 'IT';
-	for($i=0; $i<30; $i++)
-		$string .= rand(0, 9);
+	while($bool){
+		$bool=false;
+		$sql = "SELECT iban FROM final_db.conto";
+		$result = pg_prepare($db, 'p', $sql);
+		$value = array();
+		$result = pg_execute($db, 'p', $value);
+		$string.=random_n(30);
+		while($row=pg_fetch_assoc($result)){
+			if($row['iban']==$string){
+			 	$bool=true;
+			}
+		}	
+	}
 	if($tetto != NULL && $deprif != NULL){
 		$sql = "INSERT INTO final_db.conto_credito VALUES ($1, $2, $3)";
 		$result = pg_prepare($db, 'q', $sql);
@@ -376,11 +397,21 @@ function change_mail($username, $mail){
 
 function insert_bilancio($disp, $val, $data, $iban, $mail, $categorie){
 	$db=connection_pgsql();
-	$t='';
-	for($i=0 ; $i<8; $i++){
-		$t.=rand(0,9);
+	$t="";
+	$bool=true;
+	while($bool){
+		$bool=false;
+		$sql = "SELECT id FROM final_db.bilancio";
+		$result = pg_prepare($db, 'l', $sql);
+		$value = array();
+		$result = pg_execute($db, 'l', $value);
+		$t.=random_n(8);
+		while($row=pg_fetch_assoc($result)){
+			if($row['id']==$t){
+			 	$bool=true;
+			}
+		}	
 	}
-
 	$sql= "INSERT INTO final_db.bilancio (id, disponibilita, valore_iniziale, data_scadenza, iban, mail) VALUES ($1, $2, $3, $4, $5, $6)";
 	$result=pg_prepare($db, "q", $sql);
 	$value=array($t, $disp, $val, $data, $iban, $mail );
