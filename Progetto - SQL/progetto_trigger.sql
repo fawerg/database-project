@@ -57,14 +57,21 @@ CREATE OR REPLACE FUNCTION effettua_transazione() RETURNS TRIGGER AS $$
 DECLARE
 	my_tipo final_db.categoria.tipo%TYPE;
 	my_ammontare final_db.conto.ammontare%TYPE;
+	my_id final_db.bilancio.id%TYPE;
+	my_disponibilita final_db.bilancio.disponibilita%TYPE;
 BEGIN
 	SELECT tipo INTO my_tipo FROM final_db.categoria WHERE nome = NEW.nome;
 	SELECT ammontare INTO my_ammontare FROM final_db.conto WHERE iban = NEW.iban;
 	IF(my_tipo == '-') THEN
-		IF(my_ammontare - NEW.entita_economica < 0) THEN
-			RAISE EXCEPTION 'Errore: fondi insufficienti per effettuare la spesa.';
+		SELECT id, disponibilita INTO my_id, my_disponibilita FROM final_db.bilancio NATURAL JOIN final_db.categoria_bilancio WHERE mail = NEW.mail AND nome = NEW.nome;
+		IF((my_id IS NULL) OR (my_disponibilita - NEW.entita_economica < 0)) THEN
+			IF(my_ammontare - NEW.entita_economica < 0) THEN
+				RAISE EXCEPTION 'Errore: fondi insufficienti per effettuare la spesa.';
+			ELSE
+				UPDATE final_db.conto SET ammontare = ammontare - NEW.entita_economica WHERE iban = NEW.iban;
+			END IF;
 		ELSE
-			UPDATE final_db.conto SET ammontare = ammontare - NEW.entita_economica WHERE iban = NEW.iban;
+			UPDATE final_db.bilancio SET disponibilita = disponibilita - NEW.entita_economica WHERE id = my_id;
 		END IF;
 	ELSE
 		UPDATE final_db.conto SET ammontare = ammontare + NEW.entita_economica WHERE iban = NEW.iban;
