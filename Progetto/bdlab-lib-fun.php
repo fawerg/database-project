@@ -15,8 +15,6 @@ function user_check($name, $pass) {
 	pg_free_result($result);
 	pg_close($db);
 	
-	update_scheduler();
-	
 	if($row['password'] == $pass){
 		$_SESSION['isLogged'] = $name;
 		return true;
@@ -568,31 +566,6 @@ function user_logout() {
     
     unset ($_SESSION['isLogged']);
 
-}
-
-function update_scheduler(){
-	$db = connection_pgsql();
-
-	$sql = "DELETE FROM final_db.scheduler WHERE id = '0'";
-	print $sql."\n";
-	$result = pg_prepare($db, "delete", $sql);
-	$data = array();
-	$result = pg_execute($db, "delete", $data);
-	
-	$sql = "UPDATE final_db.scheduler SET id = '0' WHERE id = '1'";
-	print $sql."\n";
-	$result = pg_prepare($db, "update", $sql);
-	$data = array();
-	$result = pg_execute($db, "update", $data);
-	
-	$date = getdate();
-	$sql = "INSERT INTO final_db.scheduler VALUES ('1', $1, $2, $3)";
-	print $sql."\n";
-	$result = pg_prepare($db, "insert", $sql);
-	$data = array($date['mday'], $date['mon'], $date['year']);
-	$result = pg_execute($db, "insert", $data);
-	pg_free_result($result);
-	pg_close($db);
 }
 
 function connection_pgsql() {
