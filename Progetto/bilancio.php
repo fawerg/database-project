@@ -106,7 +106,12 @@
 						}
 					
 						if(isset($_POST['Invia'])){
-							insert_bilancio($_POST['disponibilità'], $_POST['val_iniziale'], $_POST['data_fine'], $_POST['ib_rif'], $_SESSION['isLogged'], $_POST['cat_ref']);
+							$array_key = array_keys($_POST);
+							$array_categories = array();
+							for($i=4; $i<count($array_key)-1; $i++){
+								$array_categories[] = $_POST[$array_key[$i]];
+							}
+							insert_bilancio($_POST['disponibilità'], $_POST['val_iniziale'], $_POST['data_fine'], $_POST['ib_rif'], $_SESSION['isLogged'], $array_categories);
 							header('Location: bilancio.php');
 						}
 					}
