@@ -54,6 +54,8 @@
 							<td colspan='7' class='td-containt'>
 								<form class='padding-el' method='post' action='ct.php'>									
 									<input type='submit' name='transazione' value='Crea Nuova Transazione' />
+								</form>
+								<form class='padding-el' method='post' action='ccat.php'>
 									<input type='submit' name='categoria' value='Crea Nuova Categoria' />
 								</form>
 							</td>
