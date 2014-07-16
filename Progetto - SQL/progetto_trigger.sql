@@ -88,49 +88,48 @@ CREATE TRIGGER conto_transazione BEFORE INSERT OR UPDATE ON transazione FOR EACH
 ---------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION effettua_transazione_programmata() RETURNS VOID AS $$
-
 DECLARE
 	data date;
 	my_data final_db.transazione.data_transazione%TYPE;
+
 BEGIN
 	data=current_date;
-	SELECT data_transazione INTO my_data FROM final_db.transazione_programmata NATURAL JOIN final_db.transazione WHERE data_operativa=data;
-	IF(my_data IS NOT NULL) THEN
-		UPDATE final_db.transazione SET data_transazione= now() , tipologia='n' WHERE data_transazione=my_data;
-		DELETE FROM final_db.transazione_programmata WHERE data_transazione=my_data;
-	END IF;
+	FOR my_data IN SELECT data_transazione FROM final_db.transazione_programmata NATURAL JOIN final_db.transazione WHERE data_operativa=data
+	LOOP
+	       IF(my_data IS NOT NULL) THEN
+	       		DELETE FROM final_db.transazione_programmata WHERE data_transazione=my_data;
+		    	UPDATE final_db.transazione SET data_transazione= localtimestamp , tipologia='n' WHERE my_data=data_transazione;
+		    
+	        END IF;
+        END LOOP;
 END;
 $$ LANGUAGE 'plpgsql';
 ---------------------------------------------------------------------
-CREATE OR REPLACE FUNCTION update_conti_credito() RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION update_conti_credito() RETURNS VOID AS $$
 
 DECLARE
-	my_mese final_db.scheduler.mese%TYPE;
 	my_credito final_db.conto.iban%TYPE;
+	my_ammontare2 final_db.conto.ammontare%TYPE;
 	my_ammontare final_db.conto.ammontare%TYPE;
 	my_tetto final_db.conto_credito.tetto_max%TYPE;
 	my_deposito final_db.conto_credito.deposito_riferimento%TYPE;
 BEGIN
-	SELECT mese INTO my_mese FROM final_db.scheduler WHERE id = '0';
-	IF(my_mese < NEW.mese) THEN
-		FOR my_credito, my_ammontare, my_tetto, my_deposito IN SELECT iban, ammontare, tetto_max, deposito_riferimento FROM final_db.conto NATURAL JOIN final_db.conto_credito
-		LOOP
-			UPDATE final_db.conto SET ammontare = ammontare - my_tetto - my_ammontare WHERE iban = my_deposito;
-			UPDATE final_db.conto SET ammontare = my_tetto WHERE iban = my_credito;
-		END LOOP;
-	END IF;
-	RETURN NEW;
+	FOR my_credito, my_ammontare, my_tetto, my_deposito IN SELECT iban, ammontare, tetto_max, deposito_riferimento FROM final_db.conto NATURAL JOIN final_db.conto_credito
+	LOOP
+		SELECT ammontare INTO my_ammontare2 FROM final_db.conto WHERE iban=my_deposito;
+		UPDATE final_db.conto SET ammontare = my_ammontare2 - (my_tetto - my_ammontare) WHERE iban = my_deposito;
+		UPDATE final_db.conto SET ammontare = my_tetto WHERE iban = my_credito;
+	END LOOP;
+	
 END;
 
 $$ LANGUAGE 'plpgsql';
 
-CREATE TRIGGER update_conti AFTER INSERT ON scheduler FOR EACH ROW EXECUTE PROCEDURE update_conti_credito();
 
 ----------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION delete_conti_credito() RETURNS TRIGGER AS $$
 
 DECLARE
-	my_mese final_db.scheduler.mese%TYPE;
 	my_credito final_db.conto.iban%TYPE;
 	my_ammontare final_db.conto.ammontare%TYPE;
 	my_tetto final_db.conto_credito.tetto_max%TYPE;
