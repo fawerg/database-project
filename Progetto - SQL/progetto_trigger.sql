@@ -41,8 +41,8 @@ BEGIN
 	IF(my_ammontare - NEW.tetto_max < 0) THEN
 		RAISE EXCEPTION 'Errore: fondi insufficienti per creare il conto di credito.';
 	ELSE
-		UPDATE conto SET ammontare = ammontare - NEW.tetto_max WHERE iban = NEW.deposito_riferimento;
-		INSERT INTO conto VALUES (NEW.iban, NEW.tetto_max, 'Credito', my_mail);
+		UPDATE final_db.conto SET ammontare = ammontare - NEW.tetto_max WHERE iban = NEW.deposito_riferimento;
+		INSERT INTO final_db.conto VALUES (NEW.iban, NEW.tetto_max, 'Credito', my_mail);
 	END IF;
 	RETURN NEW;
 END;
