@@ -124,8 +124,32 @@ BEGIN
 END;
 
 $$ LANGUAGE 'plpgsql';
+----------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION refill_bilancio() RETURNS VOID AS $$
+DECLARE
 
+BEGIN
+	FOR 	
+END;
 
+$$ LANGUAGE 'plpgsql'
+----------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION delete_bilancio() RETURNS TRIGGER AS $$
+
+DECLARE
+	my_ammontare final_db.conto.ammontare%TYPE;
+BEGIN
+	
+	IF(OLD.disponibilita != 0) THEN
+		SELECT ammontare INTO my_ammontare FROM final_db.conto WHERE iban=OLD.iban;
+		UPDATE final_db.conto SET ammontare=my_ammontare + OLD.disponibilita WHERE iban=OLD.iban;
+	END IF;
+	
+END;
+
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER delete_bilancio AFTER DELETE ON final_db.bilancio FOR EACH ROW EXECUTE PROCEDURE delete_bilancio();
 ----------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION delete_conti_credito() RETURNS TRIGGER AS $$
 
