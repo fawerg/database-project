@@ -1,5 +1,5 @@
 <?php
-    ini_set('display_errors','Off');
+    ini_set('display_errors','On');
     define ('LOGINEXPIRE', 300);
     ini_set('session.cookie_lifetime',LOGINEXPIRE);
     session_start();
@@ -51,7 +51,7 @@
 							<div class='div-table'>Transazioni Effettuate</div>
 							<pre>".print_transazioni($_SESSION['isLogged'])."</pre>
 							<div class='div-table'>Bilanci Attivi</div>
-							<pre>".print_bilanci($_SESSION['isLogged'])."</pre>
+							<pre>".print_bilanci($_SESSION['isLogged'], NULL)."</pre>
 						</td>
 					</tr>";
 				}

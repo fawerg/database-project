@@ -97,7 +97,7 @@ Categorie:";
 		$value1 = array($username, $id);
 		$result1= pg_execute($db, "l", $value1);
 		$s="";
-		$row = pg_fetch_assoc($result);
+		$row = pg_fetch_assoc($result1);
 		while($row){
 			$id = $row['id'];
 			$s.="<pre>Identificativo:".$row['id']."
@@ -107,7 +107,7 @@ Conto Associato: ".$row['iban']."
 Categorie:";
 			while($id == $row['id']){
 				$s .= " ".$row['nome'];
-				$row = pg_fetch_assoc($result);
+				$row = pg_fetch_assoc($result1);
 			}
 			$s .= "</pre>";
 		}
@@ -237,15 +237,27 @@ function remove_conto($mail, $iban){
 	pg_close($db);
 }
 
-function insert_transazione($descrizione, $ammontare, $iban, $mail, $categoria){
+function insert_transazione($descrizione, $ammontare, $iban, $mail, $categoria,$data1, $tipo){
 	$db = connection_pgsql();
 
-	
-	$sql = "INSERT INTO final_db.transazione (descrizione, entita_economica, iban, mail, nome) VALUES ($1, $2, $3, $4, $5)";
-	$result = pg_prepare($db, 'q', $sql);
-	$value = array($descrizione, $ammontare, $iban, $mail, $categoria);
-	$result = pg_execute($db, 'q', $value);
+	if($tipo==NULL && $data1== NULL){
+		$sql = "INSERT INTO final_db.transazione (descrizione, entita_economica, iban, mail, nome) VALUES ($1, $2, $3, $4, $5)";
+		$result = pg_prepare($db, 'q', $sql);
+		$value = array($descrizione, $ammontare, $iban, $mail, $categoria);
+		$result = pg_execute($db, 'q', $value);
+	}
+	else{
+		$sql = "INSERT INTO final_db.transazione (data_transazione, descrizione, entita_economica, iban, mail, nome, tipologia) VALUES ($1, $2, $3, $4, $5, $6, $7)";
+		$result = pg_prepare($db, 'q', $sql);
+		$data=date();
+		$value = array($data, $descrizione, $ammontare, $iban, $mail, $categoria, $tipo);
+		$result = pg_execute($db, 'q', $value);
 		
+		$sql = "INSERT INTO final_db.transazione_programmata (data_transazione, data_operativa, iban) VALUES ($1, $2, $3)";
+		$result = pg_prepare($db, 'p', $sql);
+		$value = array($data, $data1, $iban);
+		$result = pg_execute($db, 'p', $value);
+	}
 	pg_free_result($result);
 	pg_close($db);
 }
@@ -465,6 +477,7 @@ function saldo_contabile($mail, $iban, $data1, $data2){
 				
 	$string = "";
 	$parziale = 0;
+	$estratto=0;
 	while($row = pg_fetch_assoc($result)){
 		$estratto = $row['ammontare'];
 		$string .= "<tr>

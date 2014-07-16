@@ -112,7 +112,7 @@
 						}
 						if(isset($_POST['step'])){
 							if($_POST['categoria'] != "Altro"){
-								insert_transazione($_POST['descrizione'], $_POST['ammontare'], $_POST['iban'], $_SESSION['isLogged'], $_POST['categoria']);
+								insert_transazione($_POST['descrizione'], $_POST['ammontare'], $_POST['iban'], $_SESSION['isLogged'], $_POST['categoria'], NULL, NULL);
 								header('Location: transazioni.php');
 							}
 							else{
@@ -151,7 +151,7 @@
 						}
 						if(isset($_POST['crea'])){
 							insert_categoria($_POST['nome'], $_POST['tipo'], $_SESSION['isLogged'], $_POST['padre']);
-							insert_transazione($_POST['descrizione'], $_POST['ammontare'], $_POST['iban'], $_SESSION['isLogged'], $_POST['nome']);
+							insert_transazione($_POST['descrizione'], $_POST['ammontare'], $_POST['iban'], $_SESSION['isLogged'], $_POST['nome'], NULL, NULL);
 							header('Location: transazioni.php');
 						}
 					}
