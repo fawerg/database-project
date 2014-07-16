@@ -133,3 +133,4 @@ $$ LANGUAGE 'plpgsql';
 
 CREATE TRIGGER update_conti AFTER INSERT ON scheduler FOR EACH ROW EXECUTE PROCEDURE delete_conti_credito();
 
+----------------------------------------------------------------------------
