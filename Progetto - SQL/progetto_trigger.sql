@@ -136,7 +136,7 @@ DECLARE
 	my_val1 final_db.bilancio.valore_iniziale%TYPE;
 	my_val2 final_db.bilancio.disponibilita%TYPE;
 BEGIN
-	FOR my_date, my_id, my_inizio , my_iban my_val1, my_val2 IN SELECT data_scadenza, id , data_inizio, iban, valore_iniziale, disponibilita  FROM final_db.bilancio 
+	FOR my_date, my_id, my_inizio , my_iban, my_val1, my_val2 IN SELECT data_scadenza, id , data_inizio, iban, valore_iniziale, disponibilita  FROM final_db.bilancio 
 	LOOP
 		IF(my_date=data) THEN
 			UPDATE final_db.bilancio SET data_inizio=localtimestamp, data_scadenza=my_date+(my_date-my_inizio) WHERE id=my_id;
