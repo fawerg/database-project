@@ -127,9 +127,29 @@ $$ LANGUAGE 'plpgsql';
 ----------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION refill_bilancio() RETURNS VOID AS $$
 DECLARE
-
+	data date;
+	my_date final_db.bilancio.data_scadenza%TYPE;
+	my_id final_db.bilancio.id%TYPE;
+	my_inizio final_db.bilancio.data_inizio%TYPE;
+	my_iban final_db.bilancio.iban%TYPE;
+	my_ammontare final_db.conto.ammontare%TYPE;
+	my_val1 final_db.bilancio.valore_iniziale%TYPE;
+	my_val2 final_db.bilancio.disponibilita%TYPE;
 BEGIN
-	FOR 	
+	FOR my_date, my_id, my_inizio , my_iban my_val1, my_val2 IN SELECT data_scadenza, id , data_inizio, iban, valore_iniziale, disponibilita  FROM final_db.bilancio 
+	LOOP
+		IF(my_date=data) THEN
+			UPDATE final_db.bilancio SET data_inizio=localtimestamp, data_scadenza=my_date+(my_date-my_inizio) WHERE id=my_id;
+			SELECT ammontare INTO my_ammontare FROM final_db.conto WHERE iban=my_iban;
+			IF(my_ammontare < my_val1-my_val2) THEN
+				RAISE EXCEPTION 'Errore: fondi insufficienti per rimpinguare il bilancio.';
+			
+			ELSE
+				UPDATE final_db.conto SET ammontare =  my_ammontare -(my_val1- my_val2);
+				UPDATE final_db.bilancio SET disponibilita = my_val1 WHERE id=my_id;
+			END IF;
+		END IF;
+	END LOOP;
 END;
 
 $$ LANGUAGE 'plpgsql'
