@@ -239,7 +239,6 @@ function remove_conto($mail, $iban){
 
 function insert_transazione($descrizione, $ammontare, $iban, $mail, $categoria,$data1, $tipo){
 	$db = connection_pgsql();
-
 	if($tipo==NULL && $data1== NULL){
 		$sql = "INSERT INTO final_db.transazione (descrizione, entita_economica, iban, mail, nome) VALUES ($1, $2, $3, $4, $5)";
 		$result = pg_prepare($db, 'q', $sql);
@@ -249,9 +248,12 @@ function insert_transazione($descrizione, $ammontare, $iban, $mail, $categoria,$
 	else{
 		$sql = "INSERT INTO final_db.transazione (data_transazione, descrizione, entita_economica, iban, mail, nome, tipologia) VALUES ($1, $2, $3, $4, $5, $6, $7)";
 		$result = pg_prepare($db, 'q', $sql);
-		$data=date();
+		$date = date_create();
+		$data= date("Y-m-d H:i:s.u");
+		echo $data;
 		$value = array($data, $descrizione, $ammontare, $iban, $mail, $categoria, $tipo);
 		$result = pg_execute($db, 'q', $value);
+		
 		
 		$sql = "INSERT INTO final_db.transazione_programmata (data_transazione, data_operativa, iban) VALUES ($1, $2, $3)";
 		$result = pg_prepare($db, 'p', $sql);
@@ -463,7 +465,7 @@ function saldo_contabile($mail, $iban, $data1, $data2){
 	$sql= "CREATE OR REPLACE  VIEW final_db.saldo AS
 			SELECT *
 			FROM final_db.conto NATURAL JOIN final_db.transazione
-			WHERE mail = '".$mail."' AND iban = '".$iban."' AND data_transazione::date >= '".$data1."' AND data_transazione::date <= '".$data2."'
+			WHERE mail = '".$mail."' AND iban = '".$iban."' AND data_transazione::date >= '".$data1."' AND data_transazione::date <= '".$data2."' AND tipologia='n'
 			ORDER BY data_transazione ASC";
 	$result = pg_prepare($db , "q", $sql);
 	$value = array();

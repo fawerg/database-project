@@ -1,5 +1,5 @@
 <?php
-    ini_set('display_errors','Off');
+    ini_set('display_errors','On');
     define ('LOGINEXPIRE', 300);
     ini_set('session.cookie_lifetime',LOGINEXPIRE);
     session_start();
@@ -88,7 +88,7 @@
 								</tr> 	
 							";								
 						}
-						if(isset($_POST['avanti'])){
+						if(!isset($_POST['crea'])&&isset($_POST['avanti'])){
 							print"
 							<tr>
 								<td colspan='7' class='td-containt'>
@@ -129,7 +129,7 @@
 
 						}
 						if(isset($_POST['crea'])){
-							insert_transazione($POST['descrizione'], $POST['ammontare'], $POST['iban'], $SESSION['isLogged'], $POST['categoria'], $_POST['d'],"p");
+							insert_transazione($_POST['descrizione'], $_POST['ammontare'], $_POST['iban'], $_SESSION['isLogged'], $_POST['categoria'], $_POST['d'],'p');
 							//header('Location: transazioni.php');
 						}
 			}

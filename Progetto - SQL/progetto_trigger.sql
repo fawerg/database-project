@@ -84,8 +84,23 @@ END;
 
 $$ LANGUAGE 'plpgsql';
 
-CREATE TRIGGER conto_transazione BEFORE INSERT ON transazione FOR EACH ROW EXECUTE PROCEDURE effettua_transazione();
+CREATE TRIGGER conto_transazione BEFORE INSERT OR UPDATE ON transazione FOR EACH ROW EXECUTE PROCEDURE effettua_transazione();
+---------------------------------------------------------------------
 
+CREATE OR REPLACE FUNCTION effettua_transazione_programmata() RETURNS VOID AS $$
+
+DECLARE
+	data date;
+	my_data final_db.transazione.data_transazione%TYPE;
+BEGIN
+	data=current_date;
+	SELECT data_transazione INTO my_data FROM final_db.transazione_programmata NATURAL JOIN final_db.transazione WHERE data_operativa=data;
+	IF(my_data IS NOT NULL) THEN
+		UPDATE final_db.transazione SET data_transazione= now() , tipologia='n' WHERE data_transazione=my_data;
+		DELETE FROM final_db.transazione_programmata WHERE data_transazione=my_data;
+	END IF;
+END;
+$$ LANGUAGE 'plpgsql';
 ---------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION update_conti_credito() RETURNS TRIGGER AS $$
 
