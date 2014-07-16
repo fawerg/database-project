@@ -1,5 +1,5 @@
 <?php
-    ini_set('display_errors','On');
+    ini_set('display_errors','Off');
     define ('LOGINEXPIRE', 300);
     ini_set('session.cookie_lifetime',LOGINEXPIRE);
     session_start();
@@ -10,6 +10,16 @@
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 		<link href="alter-style.css" rel="stylesheet" type="text/css" />
 		<title>Transazioni</title>
+		<script>
+			function myFunction(){
+				if(document.getElementById("categoria").value == "Altro"){
+					document.getElementById("button").value = "Continua";
+				}
+				else{
+					document.getElementById("button").value = "Crea Transazione";
+				}
+			}
+		</script>
 	</head>
 	<body>
 		<div class="div-header">HOME BANKING - LA BANCA A CASA TUA</div>
@@ -50,7 +60,7 @@
 								</div>
 							</td>
 						</tr>";
-						if(!isset($_POST['prog'])){
+						if(!isset($_POST['prog']) && !isset($_POST['crea']) && !isset($_POST['avanti'])){
 							print"
 							<tr>
 								<td colspan='7' class='td-containt'>
@@ -66,30 +76,61 @@
 								</td>
 							</tr>";
 						}
-						if(isset($_POST['prog'])){
+						if(!isset($_POST['avanti']) && isset($_POST['prog'])){
+							print "
+								<tr>
+									<td colspan='7' class='td-containt'>
+										<form class='padding-el' method='post' action='transazioni.php'>
+											<select name='tipo'><option>Spesa</option><option>Entrata</option></select>
+											<input type='submit' name='avanti' value='Avanti'/>
+										</form>
+									</td>
+								</tr> 	
+							";								
+						}
+						if(isset($_POST['avanti'])){
 							print"
 							<tr>
 								<td colspan='7' class='td-containt'>
-									<form name='frmMain' method='post'> 
+									<form method='post' action='transazioni.php'> 
 										<table>
-											<tr>
-												<td colspan='7' >
-												Date: <input type='text' name='txtDate' value='mm/dd/yyyy' size='15' maxlength='10'>  
-												<input type='button' name='cmdCal' value='Calendario' onClick=\"javascript:window.open('calendar.php?form=frmMain & field=txtDate','',' top=50 , left=400 , width=175, height=140, menubar=no, toolbar=no ,scrollbars=no ,resizable=yes,status=no'); return false;\"> 
-												</td>
-												
-											</tr>
-											<tr>
-												<td colspas='7' >
-													<input type='submit' name='crea' value='Invia'>
-												</td>
-											</tr>
+												<tr>
+													<td>Descrizione: </td>
+													<td><input type='text' name='descrizione'/></td>
+												</tr>
+												<tr>
+													<td>Ammontare: </td>
+													<td><input type='text' name='ammontare'/></td>
+												</tr>
+												<tr>
+													<td>Iban Associato: </td>
+													<td><select name='iban'>".lista_iban($_SESSION['isLogged'], false)."</select></td>
+												</tr>
+												<tr>
+													<td>Data programmata: </td>
+													<td><input type='date' name='d'/> </td>
+												</tr>
+												<tr>
+													<td>Categoria: </td>";
+													$_POST['tipo'] == "Spesa" ? print "<td><select id='categoria' onChange='myFunction()' name='categoria'>".lista_categorie($_SESSION['isLogged'], '-')."<option>Altro</option></select></td>" : print "<td><select id='categoria' onChange='myFunction()' name='categoria'>".lista_categorie($_SESSION['isLogged'], '+')."<option>Altro</option></select></td>";
+														print "
+												</tr>
+											
+												<tr>
+													<td colspas='7' >
+														<input type='submit' name='crea' value='Invia'>
+													</td>
+												</tr>
 										</table>
 									</form> 
 								</td>
 							</tr>
 							";
 
+						}
+						if(isset($_POST['crea'])){
+							insert_transazione($POST['descrizione'], $POST['ammontare'], $POST['iban'], $SESSION['isLogged'], $POST['categoria'], $_POST['d'],"p");
+							//header('Location: transazioni.php');
 						}
 			}
 			else{
