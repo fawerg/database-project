@@ -60,9 +60,9 @@
 								</div>
 							</td>
 						</tr>";
-						if(!isset($_POST['prog']) && !isset($_POST['crea']) && !isset($_POST['avanti'])){
+						if(!isset($_POST['prog']) && !isset($_POST['crea']) && !isset($_POST['avanti'])&&!isset($_POST['svuota'])){
 							print"
-							<tr>
+							<tr> 
 								<td colspan='7' class='td-containt'>
 									<form class='padding-el' method='post' action='ct.php'>									
 										<input type='submit' name='transazione' value='Crea Nuova Transazione' />
@@ -71,7 +71,10 @@
 										<input type='submit' name='categoria' value='Crea Nuova Categoria' />
 									</form>
 									<form class='padding-el' method='post' action='transazioni.php'>
-										<input type='submit' name='prog' value='Crea transazione programmata'>
+										<input type='submit' name='prog' value='Crea transazione programmata'/>
+									</form>
+									<form class='padding-el' method='post' action='transazioni.php'>
+										<input type='submit' name='svuota' value='Svuota registro transazioni'/>
 									</form>
 								</td>
 							</tr>";
@@ -130,7 +133,11 @@
 						}
 						if(isset($_POST['crea'])){
 							insert_transazione($_POST['descrizione'], $_POST['ammontare'], $_POST['iban'], $_SESSION['isLogged'], $_POST['categoria'], $_POST['d'],'p');
-							//header('Location: transazioni.php');
+							header('Location: transazioni.php');
+						}
+						if(isset($_POST['svuota'])){
+							remove_transazioni($_SESSION['isLogged']);
+							header('Location: transazioni.php');
 						}
 			}
 			else{

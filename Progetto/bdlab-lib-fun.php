@@ -466,6 +466,17 @@ function remove_bilancio($mail, $id){
 	pg_close($db);
 }
 
+function remove_transazioni($mail){
+	$db=connection_pgsql();
+	$sql="DELETE FROM final_db.transazione WHERE mail=$1";
+	$result= pg_prepare($db, "q", $sql);
+	$value=array($mail);
+	$result=pg_execute($db, "q", $value);
+	
+	pg_free_result($result);
+	pg_close($db);
+}
+
 function saldo_contabile($mail, $iban, $data1, $data2){
 	$db = connection_pgsql();
 	

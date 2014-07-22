@@ -170,10 +170,28 @@ END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE TRIGGER delete_bilancio AFTER DELETE ON final_db.bilancio FOR EACH ROW EXECUTE PROCEDURE delete_bilancio();
-----------------------------------------------------------------------
+-------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION fill_bilancio() RETURNS TRIGGER AS $$
+
+DECLARE
+	my_ammontare final_db.conto.ammontare%TYPE;
+BEGIN
+	SELECT ammontare INTO my_ammontare FROM final_db.conto WHERE iban = NEW.iban;
+	UPDATE final_db.conto SET ammontare = my_ammontare - NEW.disponibilita WHERE iban=NEW.iban;
+	RETURN NEW;
+END;
+
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER fill_bilancio BEFORE INSERT ON final_db.bilancio FOR EACH ROW EXECUTE PROCEDURE fill_bilancio();
+------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION delete_conti_credito() RETURNS TRIGGER AS $$
 
 DECLARE
+	my_id final_db.bilancio.id%TYPE;
+	
+	
 	my_ammontare final_db.conto.ammontare%TYPE;
 	my_ammontare2 final_db.conto.ammontare%TYPE;
 	my_deposito final_db.conto_credito.deposito_riferimento%TYPE;
@@ -181,6 +199,10 @@ DECLARE
 BEGIN	
 	SELECT iban into my_iban FROM final_db.conto_credito WHERE iban=OLD.iban;
 	IF(my_iban IS NOT NULL) THEN
+		FOR my_id IN SELECT id FROM final_db.bilancio WHERE iban=OLD.iban 
+		LOOP
+			DELETE FROM final_db.bilancio WHERE id=my_id;
+		END LOOP;
 		SELECT ammontare, deposito_riferimento INTO my_ammontare, my_deposito FROM final_db.conto NATURAL JOIN final_db.conto_credito WHERE iban=OLD.iban;
 		IF(my_ammontare >=0) THEN
 			SELECT  ammontare INTO my_ammontare2 FROM final_db.conto WHERE iban=my_deposito;
