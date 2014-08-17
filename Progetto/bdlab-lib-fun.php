@@ -123,7 +123,7 @@ Categorie:";
 function print_transazioni($username){
 	$db = connection_pgsql();
 	
-	$sql= "SELECT data_transazione, iban, entita_economica, descrizione, nome, tipo FROM final_db.transazione NATURAL JOIN final_db.categoria WHERE mail = $1";
+	$sql= "SELECT data_transazione, iban, entita_economica, descrizione, nome, tipo, tipologia FROM final_db.transazione NATURAL JOIN final_db.categoria WHERE mail = $1";
 	$result= pg_prepare($db , "q", $sql);
 	$value = array($username);
 	$result= pg_execute($db, "q", $value);
@@ -133,8 +133,15 @@ function print_transazioni($username){
 Iban: ".$row['iban']."
 Ammontare: ".$row['tipo']."".$row['entita_economica']."
 Descrizione: ".$row['descrizione']."
-Categoria: ".$row['nome']."</pre>";
+Categoria: ".$row['nome'];
+		if($row['tipologia']=='n'){
+			$s.="<br>Tipologia: Normale</pre>";	
+		}
+		else{
+			$s.="<br>Tipologia: Programmata</pre>";	
+		}
 	}
+	
 	pg_free_result($result);
 	pg_close($db);
 	return $s;
@@ -239,7 +246,6 @@ function remove_conto($mail, $iban){
 
 function insert_transazione($descrizione, $ammontare, $iban, $mail, $categoria,$data1, $tipo){
 	$db = connection_pgsql();
-
 	if($tipo==NULL && $data1== NULL){
 		$sql = "INSERT INTO final_db.transazione (descrizione, entita_economica, iban, mail, nome) VALUES ($1, $2, $3, $4, $5)";
 		$result = pg_prepare($db, 'q', $sql);
@@ -249,9 +255,12 @@ function insert_transazione($descrizione, $ammontare, $iban, $mail, $categoria,$
 	else{
 		$sql = "INSERT INTO final_db.transazione (data_transazione, descrizione, entita_economica, iban, mail, nome, tipologia) VALUES ($1, $2, $3, $4, $5, $6, $7)";
 		$result = pg_prepare($db, 'q', $sql);
-		$data=date();
+		$date = date_create();
+		$data= date("Y-m-d H:i:s.u");
+		echo $data;
 		$value = array($data, $descrizione, $ammontare, $iban, $mail, $categoria, $tipo);
 		$result = pg_execute($db, 'q', $value);
+		
 		
 		$sql = "INSERT INTO final_db.transazione_programmata (data_transazione, data_operativa, iban) VALUES ($1, $2, $3)";
 		$result = pg_prepare($db, 'p', $sql);
@@ -457,13 +466,24 @@ function remove_bilancio($mail, $id){
 	pg_close($db);
 }
 
+function remove_transazioni($mail){
+	$db=connection_pgsql();
+	$sql="DELETE FROM final_db.transazione WHERE mail=$1";
+	$result= pg_prepare($db, "q", $sql);
+	$value=array($mail);
+	$result=pg_execute($db, "q", $value);
+	
+	pg_free_result($result);
+	pg_close($db);
+}
+
 function saldo_contabile($mail, $iban, $data1, $data2){
 	$db = connection_pgsql();
 	
 	$sql= "CREATE OR REPLACE  VIEW final_db.saldo AS
 			SELECT *
 			FROM final_db.conto NATURAL JOIN final_db.transazione
-			WHERE mail = '".$mail."' AND iban = '".$iban."' AND data_transazione::date >= '".$data1."' AND data_transazione::date <= '".$data2."'
+			WHERE mail = '".$mail."' AND iban = '".$iban."' AND data_transazione::date >= '".$data1."' AND data_transazione::date <= '".$data2."' AND tipologia='n'
 			ORDER BY data_transazione ASC";
 	$result = pg_prepare($db , "q", $sql);
 	$value = array();
