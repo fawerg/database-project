@@ -581,15 +581,34 @@ function percentuale_spesa($mail, $d1, $d2){
 	$value=array();
 	$result= pg_execute($db, "q", $value);
 	
-	$sql= "SELECT nome,iban, SUM(entita_economica)
+	$sql= "SELECT nome, iban, SUM(entita_economica)
 		FROM final_db.spese_globali
 		WHERE tipo='-'
 		GROUP BY nome, iban";
 	$result=pg_prepare($db, "p", $sql);
 	$value=array();
 	$result=pg_execute($db, "p", $value);
+	
+	$array_categorie = array();
+	$array_quantitativi = array();
+	$i = 0;
+	$sum = 0;
 	$string="";
-	while($row=pg_fetch_assoc($result)){
+	while($row = pg_fetch_assoc($result)){
+		$j = 0;
+		$sum += $row['sum'];
+		while($j < $i){
+			if($row['nome'] == $array_categorie[$j]){
+				$array_quantitativi[$j] += $row['sum'];
+				break;
+			}
+			$j++;
+		}
+		if($j == $i){
+			$array_categorie[$i] = $row['nome'];
+			$array_quantitativi[$i] = $row['sum'];
+			$i++;
+		}
 		$string.="
 				<tr>
 					<td class='td-rapporti'>".$row['iban']."</td>
@@ -600,24 +619,20 @@ function percentuale_spesa($mail, $d1, $d2){
 				</tr>
 			";
 	}
-	pg_free_result($result);
-	$sql= "SELECT nome, iban, SUM(entita_economica)
-		FROM final_db.spese_globali
-		WHERE tipo='+'
-		GROUP BY nome,iban";
-	$result=pg_prepare($db, "l", $sql);
-	$value=array();
-	$result=pg_execute($db, "l", $value);
-	while($row=pg_fetch_assoc($result)){
-		$string.="
-				<tr>
-					<td class='td-rapporti'>".$row['iban']."</td>
-					<td class='td-rapporti'>".$row['nome']."</td>
-					<td></td>
-					<td align='right'>+</td>
-					<td class='td-rapporti'>".$row['sum']."</td>
+	$string .= "<tr>
+					<td colspan='5'><hr></td>
 				</tr>
-			";
+				<tr>
+					<td class='td-rapporti' colspan='4' align='left'>SPESA TOTALE</td>
+					<td class='td-rapporti'>".$sum."</td>
+				</tr>";
+	$j = 0;
+	while($j < $i){
+		$string .= "<tr>
+						<td colspan='4' align='left'>".$array_categorie[$j]."</td>
+						<td class='td-rapporti'>".$array_quantitativi[$j]."(".($array_quantitativi[$j]*100)/$sum."%)
+					</tr>";
+		$j++;
 	}
 	pg_free_result($result);
 	pg_close($db);
@@ -638,6 +653,7 @@ function connection_pgsql() {
     $connection = "host=".myhost." dbname=".mydb." user=".myuser." password=".mypsw;
 	
     return pg_connect ($connection);
+	
     
 }
 ?>
