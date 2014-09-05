@@ -230,6 +230,20 @@
 												</tr>"
 												.saldo_bilancio($_SESSION['isLogged'], $_POST['id'], $_POST['data_inizio'], $_POST['data_fine']).
 											"</table>
+											<table width='100%'>
+												<tr>
+													<td>
+														<img src='phpgraph2.php'>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<form method='post' class='padding-el' method='post' action='rapporti.php'>
+															<input type='submit' value='Indietro'>
+														</form>
+													</td>
+												</tr>
+											</table>
 										</td>
 									</tr>";
 								break;
@@ -242,17 +256,23 @@
 											</div>
 											<br>
 											<table width='100%'>
-												<tr>
-													<td class='td-rapporti'>Data transazione(gg/mm/yy)</td><td class='td-rapporti'>Descrizione</td><td class='td-rapporti'>Categoria</td><td class='td-rapporti'></td><td class='td-rapporti'>Entità economica (€)</td>
-												</tr>"
-												.saldo_bilancio($_SESSION['isLogged'], $_POST['id1'], $_POST['data_inizio'], $_POST['data_fine']).
+											
+												".saldo_bilancio2($_SESSION['isLogged'], $_POST['id1'],$_POST['id2'], $_POST['data_inizio'], $_POST['data_fine']).
 											"</table>
 											<table width='100%'>
 												<tr>
-													<td class='td-rapporti'>Data transazione(gg/mm/yy)</td><td class='td-rapporti'>Descrizione</td><td class='td-rapporti'>Categoria</td><td class='td-rapporti'></td><td class='td-rapporti'>Entità economica (€)</td>
-												</tr>"
-												.saldo_bilancio($_SESSION['isLogged'], $_POST['id2'], $_POST['data_inizio'], $_POST['data_fine']).
-											"</table>
+													<td>
+														<img src='phpgraph3.php'>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<form method='post' class='padding-el' method='post' action='rapporti.php'>
+															<input type='submit' value='Indietro'>
+														</form>
+													</td>
+												</tr>
+											</table>
 										</td>
 									</tr>";
 								break;
