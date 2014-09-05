@@ -199,6 +199,20 @@
 												</tr>"
 												.saldo_contabile($_SESSION['isLogged'], $_POST['ib_rif'], $_POST['data_inizio'], $_POST['data_fine']).
 											"</table>
+											<table width='100%'>
+												<tr>
+													<td>
+														<img src='phpgraph.php'>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<form method='post' class='padding-el' method='post' action='rapporti.php'>
+															<input type='submit' value='Indietro'>
+														</form>
+													</td>
+												</tr>
+											</table>
 										</td>
 									</tr>";
 								break;

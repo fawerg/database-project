@@ -123,7 +123,7 @@ Categorie:";
 function print_transazioni($username){
 	$db = connection_pgsql();
 	
-	$sql= "SELECT data_transazione, iban, entita_economica, descrizione, nome, tipo, tipologia FROM final_db.transazione NATURAL JOIN final_db.categoria WHERE mail = $1";
+	$sql= "SELECT data_transazione, iban, entita_economica, descrizione, nome, tipo, type FROM final_db.transazione NATURAL JOIN final_db.categoria WHERE mail = $1";
 	$result= pg_prepare($db , "q", $sql);
 	$value = array($username);
 	$result= pg_execute($db, "q", $value);
@@ -134,7 +134,7 @@ Iban: ".$row['iban']."
 Ammontare: ".$row['tipo']."".$row['entita_economica']."
 Descrizione: ".$row['descrizione']."
 Categoria: ".$row['nome'];
-		if($row['tipologia']=='n'){
+		if($row['type']=='n'){
 			$s.="<br>Tipologia: Normale</pre>";	
 		}
 		else{
@@ -482,17 +482,18 @@ function saldo_contabile($mail, $iban, $data1, $data2){
 	
 	$sql= "CREATE OR REPLACE  VIEW final_db.saldo AS
 			SELECT *
-			FROM final_db.conto NATURAL JOIN final_db.transazione
-			WHERE mail = '".$mail."' AND iban = '".$iban."' AND data_transazione::date >= '".$data1."' AND data_transazione::date <= '".$data2."' AND tipologia='n'
+			FROM final_db.conto NATURAL JOIN final_db.transazione 
+			WHERE mail = '".$mail."' AND iban = '".$iban."' AND data_transazione::date>='".$data1."' AND data_transazione::date<= '".$data2."' AND type='n'
 			ORDER BY data_transazione ASC";
 	$result = pg_prepare($db , "q", $sql);
 	$value = array();
-	$result = pg_execute($db, "q", $value);
-				
+	
+	$result = pg_execute($db, "q", $value);		
 	$sql= "SELECT *
 			FROM final_db.saldo NATURAL JOIN final_db.categoria";
 	$result = pg_prepare($db , "p", $sql);
 	$value = array();
+	$data=array();
 	$result = pg_execute($db, "p", $value);
 				
 	$string = "";
@@ -500,6 +501,7 @@ function saldo_contabile($mail, $iban, $data1, $data2){
 	$estratto=0;
 	while($row = pg_fetch_assoc($result)){
 		$estratto = $row['ammontare'];
+		$row['tipo'] == "+" ? $value[$row['data_transazione']]=$parziale+$row['entita_economica'] :$value[$row['data_transazione']]=$parziale-$row['entita_economica'];
 		$string .= "<tr>
 						<td class='td-rapporti'>".date("d-m-Y", strtotime($row['data_transazione']))."</td>
 						<td class='td-rapporti'>".$row['descrizione']."</td>
@@ -526,7 +528,7 @@ function saldo_contabile($mail, $iban, $data1, $data2){
 					<td class='td-rapporti' text-align='right'> + </td>
 					<td class='td-rapporti' text-align='right'>".$estratto."</td>
 				</tr>";
-				
+	$_SESSION['array']=$value;
 	pg_free_result($result);
 	pg_close($db);
 				
