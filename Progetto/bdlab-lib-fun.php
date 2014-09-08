@@ -702,13 +702,16 @@ function percentuale_spesa($mail, $d1, $d2){
 					<td class='td-rapporti'>".$sum."</td>
 				</tr>";
 	$j = 0;
+	$v1 = array();
 	while($j < $i){
+		$v1[$array_categorie[$j]]=(integer)($array_quantitativi[$j]*100)/$sum;
 		$string .= "<tr>
 						<td colspan='4' align='left'>".$array_categorie[$j]."</td>
-						<td class='td-rapporti'>".$array_quantitativi[$j]."(".($array_quantitativi[$j]*100)/$sum."%)
+						<td class='td-rapporti'>".$array_quantitativi[$j]."(".(integer)($array_quantitativi[$j]*100)/$sum."%)
 					</tr>";
 		$j++;
 	}
+	$_SESSION['array']=$v1;
 	pg_free_result($result);
 	pg_close($db);
 	return $string;

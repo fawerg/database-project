@@ -267,7 +267,7 @@
 												</tr>
 												<tr>
 													<td>
-														<form method='post' class='padding-el' method='post' action='rapporti.php'>
+														<form class='padding-el' method='post' action='rapporti.php'>
 															<input type='submit' value='Indietro'>
 														</form>
 													</td>
@@ -290,6 +290,18 @@
 												</tr>
 												<yt>
 													<td class='td-rapporti'>".percentuale_spesa($_SESSION['isLogged'], $_POST['data_inizio'], $_POST['data_fine'])."</td>
+												</tr>
+												<tr>
+													<td>
+														<img src='phpgraph4.php'>
+													</td>
+												</tr>
+												<tr>
+													<td>
+													<form method='post' class='padding-el' action='rapporti.php'>
+														<input type='submit' value='Indietro' />
+													</form>
+													</td>
 												</tr>
 											</table>
 										</td>
