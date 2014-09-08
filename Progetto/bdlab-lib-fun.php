@@ -253,7 +253,7 @@ function insert_transazione($descrizione, $ammontare, $iban, $mail, $categoria,$
 		$result = pg_execute($db, 'q', $value);
 	}
 	else{
-		$sql = "INSERT INTO final_db.transazione (data_transazione, descrizione, entita_economica, iban, mail, nome, tipologia) VALUES ($1, $2, $3, $4, $5, $6, $7)";
+		$sql = "INSERT INTO final_db.transazione (data_transazione, descrizione, entita_economica, iban, mail, nome, type) VALUES ($1, $2, $3, $4, $5, $6, $7)";
 		$result = pg_prepare($db, 'q', $sql);
 		$date = date_create();
 		$data= date("Y-m-d H:i:s.u");
@@ -501,7 +501,7 @@ function saldo_contabile($mail, $iban, $data1, $data2){
 	$estratto=0;
 	while($row = pg_fetch_assoc($result)){
 		$estratto = $row['ammontare'];
-		$row['tipo'] == "+" ? $value[$row['data_transazione']]=$parziale+$row['entita_economica'] :$value[$row['data_transazione']]=$parziale-$row['entita_economica'];
+		$row['tipo'] == "+" ? $value[date("d-m-y H:i:s",strtotime($row['data_transazione']))]=$parziale+$row['entita_economica'] :$value[date("d-m-y H:i:s",strtotime($row['data_transazione']))]=$parziale-$row['entita_economica'];
 		$string .= "<tr>
 						<td class='td-rapporti'>".date("d-m-Y", strtotime($row['data_transazione']))."</td>
 						<td class='td-rapporti'>".$row['descrizione']."</td>
