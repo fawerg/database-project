@@ -518,7 +518,8 @@ function statistiche_conti($mail){
 	$sql="SELECT nome, SUM(entita_economica)
 		FROM final_db.statistiche_conti NATURAL JOIN final_db.categoria
 		WHERE tipo='-'
-		GROUP BY (nome)";
+		GROUP BY (nome)
+		ORDER BY (sum) DESC";
 	$result=pg_prepare($db, "q", $sql);
 	$value=array();
 	$result=pg_execute($db, "q", $value);
@@ -533,7 +534,8 @@ function statistiche_conti($mail){
 	$sql="SELECT nome, SUM(entita_economica)
 		FROM final_db.statistiche_conti NATURAL JOIN final_db.categoria
 		WHERE tipo='+'
-		GROUP BY (nome)";
+		GROUP BY (nome)
+		ORDER BY (sum) DESC";
 	$result=pg_prepare($db, "p", $sql);
 	$result=pg_execute($db, "p", $value);
 	$i=2;
@@ -805,4 +807,3 @@ function connection_pgsql() {
     
 }
 ?>
-
