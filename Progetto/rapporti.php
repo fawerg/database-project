@@ -80,6 +80,31 @@
 						<tr>
 							<td colspan='7' class='td-containt'>
 								<div class='div-table'>
+									Rapporto su statistiche conti
+								</div>
+								<br>
+								<table>
+									<tr>
+										<div>
+											Il rapporto sulle statistiche dei conti offre dei valori di spese e entrate medie dei tuoi conti. Questo rapporto permette inoltre di visualizzare il nome e gli importi delle categorie più onerose o redditizie.
+										</div>
+									</tr>";
+									if(!isset($_POST['saldo_conti'])){
+										print"
+											<tr>
+												<form class='padding-el' method='post' action='rapporti.php'>
+													<input type='hidden' name='type' value='F'/>
+													<input type='submit' name='invia' value='Richiedi Statistiche Conti'>
+												</form>
+											</tr>";
+									}
+								print
+								"</table>
+							</td>
+						</tr>
+						<tr>
+							<td colspan='7' class='td-containt'>
+								<div class='div-table'>
 									Rapporto su saldo bilancio
 								</div>
 								<br>
@@ -88,7 +113,7 @@
 										<div>
 											Il rapporto sul saldo del bilancio offre un'iidea di quanto si è speso per la categoria a cui è dedicata il bilancio.
 										</div>
-									</tr>";	
+									</tr>";
 									if(!isset($_POST['saldo_bilancio'])){
 										print"
 											<tr>
@@ -304,6 +329,27 @@
 													</td>
 												</tr>
 											</table>
+										</td>
+									</tr>";
+								break;
+							case 'F':
+								print"
+									<tr>
+										<td colspan='7' class='td-containt'>
+											<div class='div-table'>
+												Rapporto su statistiche conti
+											</div>
+											<br>
+											<table width='100%'>
+												".statistiche_conti($_SESSION['isLogged'])."
+												<tr>
+													<td>
+													<form method='post' class='padding-el' action='rapporti.php'>
+														<input type='submit' value='Indietro' />
+													</form>
+													</td>
+												</tr>
+											</table>		
 										</td>
 									</tr>";
 								break;

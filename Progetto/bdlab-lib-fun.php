@@ -475,6 +475,76 @@ function remove_transazioni($mail){
 	
 	pg_free_result($result);
 	pg_close($db);
+}	
+
+function statistiche_conti($mail){
+	$db= connection_pgsql();
+	$sql= "CREATE OR REPLACE VIEW final_db.statistiche_conti AS
+			SELECT *
+			FROM final_db.conto NATURAL JOIN final_db.transazione
+			WHERE mail='".$mail."'";
+	$resutlt= pg_prepare($db, "q", $sql);
+	$value=array();
+	$result=pg_execute($db, "q", $value);
+	
+	$sql=	"SELECT *
+		FROM final_db.statistiche_conti NATURAL JOIN final_db.categoria";
+	$result=pg_prepare($db, "p", $sql);
+	$result=pg_execute($db, "p", $value);
+	
+	$nspese=0;
+	$nentrate=0;
+	$spesa=0;
+	$entrata=0;
+	
+	while($row=pg_fetch_assoc($result)){
+		if($row['tipo']=='+'){
+			$nentrate++;
+			$entrata+=$row['entita_economica'];
+		}
+		else{
+			$nspese++;
+			$spesa+=$row['entita_economica'];
+		}
+	}
+	$media =0.00+$spesa/$nspese;
+	$string="<tr><td class='td-rapporti'>Entità di spesa media : ".$media." €</td></tr>";
+	$media= 0.00+$entrata/$nentrate;
+	$string.="<tr><td class= 'td-rapporti'>Entità di entrata media : ".$media." €</td></tr>";
+	
+	
+	pg_close($db);
+	$db=connection_pgsql();
+	$sql="SELECT nome, SUM(entita_economica)
+		FROM final_db.statistiche_conti NATURAL JOIN final_db.categoria
+		WHERE tipo='-'
+		GROUP BY (nome)";
+	$result=pg_prepare($db, "q", $sql);
+	$value=array();
+	$result=pg_execute($db, "q", $value);
+	$i=2;
+	$string.="<tr><td class='td-rapporti'>Categorie di spesa più importanti : </td></tr>";
+	while(($row=pg_fetch_assoc($result)) && $i >=0){
+		$string.="<tr><td class='td-rapporti'>".$row['nome']." (".$row['sum']." €)</td></tr>";
+		$i--;
+	}
+	
+	
+	$sql="SELECT nome, SUM(entita_economica)
+		FROM final_db.statistiche_conti NATURAL JOIN final_db.categoria
+		WHERE tipo='+'
+		GROUP BY (nome)";
+	$result=pg_prepare($db, "p", $sql);
+	$result=pg_execute($db, "p", $value);
+	$i=2;
+	$string.="<tr><td class='td-rapporti'>Categorie di entrata più importanti : </td></tr>";
+	while(($row=pg_fetch_assoc($result)) && $i >=0){
+		$string.="<tr><td class='td-rapporti'>".$row['nome']." (".$row['sum']." €)</td></tr>";
+		$i--;
+	}
+	pg_free_result($result);
+	pg_close($db);
+	return $string;
 }
 
 function saldo_contabile($mail, $iban, $data1, $data2){
