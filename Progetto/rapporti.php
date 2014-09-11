@@ -80,6 +80,31 @@
 						<tr>
 							<td colspan='7' class='td-containt'>
 								<div class='div-table'>
+									Rapporto su statistiche conti
+								</div>
+								<br>
+								<table>
+									<tr>
+										<div>
+											Il rapporto sulle statistiche dei conti offre dei valori di spese e entrate medie dei tuoi conti. Questo rapporto permette inoltre di visualizzare il nome e gli importi delle categorie più onerose o redditizie.
+										</div>
+									</tr>";
+									if(!isset($_POST['saldo_conti'])){
+										print"
+											<tr>
+												<form class='padding-el' method='post' action='rapporti.php'>
+													<input type='hidden' name='type' value='F'/>
+													<input type='submit' name='invia' value='Richiedi Statistiche Conti'>
+												</form>
+											</tr>";
+									}
+								print
+								"</table>
+							</td>
+						</tr>
+						<tr>
+							<td colspan='7' class='td-containt'>
+								<div class='div-table'>
 									Rapporto su saldo bilancio
 								</div>
 								<br>
@@ -88,7 +113,7 @@
 										<div>
 											Il rapporto sul saldo del bilancio offre un'iidea di quanto si è speso per la categoria a cui è dedicata il bilancio.
 										</div>
-									</tr>";	
+									</tr>";
 									if(!isset($_POST['saldo_bilancio'])){
 										print"
 											<tr>
@@ -199,6 +224,20 @@
 												</tr>"
 												.saldo_contabile($_SESSION['isLogged'], $_POST['ib_rif'], $_POST['data_inizio'], $_POST['data_fine']).
 											"</table>
+											<table width='100%'>
+												<tr>
+													<td>
+														<img src='phpgraph.php'>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<form method='post' class='padding-el' method='post' action='rapporti.php'>
+															<input type='submit' value='Indietro'>
+														</form>
+													</td>
+												</tr>
+											</table>
 										</td>
 									</tr>";
 								break;
@@ -216,6 +255,20 @@
 												</tr>"
 												.saldo_bilancio($_SESSION['isLogged'], $_POST['id'], $_POST['data_inizio'], $_POST['data_fine']).
 											"</table>
+											<table width='100%'>
+												<tr>
+													<td>
+														<img src='phpgraph2.php'>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<form method='post' class='padding-el' method='post' action='rapporti.php'>
+															<input type='submit' value='Indietro'>
+														</form>
+													</td>
+												</tr>
+											</table>
 										</td>
 									</tr>";
 								break;
@@ -228,17 +281,23 @@
 											</div>
 											<br>
 											<table width='100%'>
-												<tr>
-													<td class='td-rapporti'>Data transazione(gg/mm/yy)</td><td class='td-rapporti'>Descrizione</td><td class='td-rapporti'>Categoria</td><td class='td-rapporti'></td><td class='td-rapporti'>Entità economica (€)</td>
-												</tr>"
-												.saldo_bilancio($_SESSION['isLogged'], $_POST['id1'], $_POST['data_inizio'], $_POST['data_fine']).
+											
+												".saldo_bilancio2($_SESSION['isLogged'], $_POST['id1'],$_POST['id2'], $_POST['data_inizio'], $_POST['data_fine']).
 											"</table>
 											<table width='100%'>
 												<tr>
-													<td class='td-rapporti'>Data transazione(gg/mm/yy)</td><td class='td-rapporti'>Descrizione</td><td class='td-rapporti'>Categoria</td><td class='td-rapporti'></td><td class='td-rapporti'>Entità economica (€)</td>
-												</tr>"
-												.saldo_bilancio($_SESSION['isLogged'], $_POST['id2'], $_POST['data_inizio'], $_POST['data_fine']).
-											"</table>
+													<td>
+														<img src='phpgraph3.php'>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<form class='padding-el' method='post' action='rapporti.php'>
+															<input type='submit' value='Indietro'>
+														</form>
+													</td>
+												</tr>
+											</table>
 										</td>
 									</tr>";
 								break;
@@ -257,7 +316,40 @@
 												<yt>
 													<td class='td-rapporti'>".percentuale_spesa($_SESSION['isLogged'], $_POST['data_inizio'], $_POST['data_fine'])."</td>
 												</tr>
+												<tr>
+													<td>
+														<img src='phpgraph4.php'>
+													</td>
+												</tr>
+												<tr>
+													<td>
+													<form method='post' class='padding-el' action='rapporti.php'>
+														<input type='submit' value='Indietro' />
+													</form>
+													</td>
+												</tr>
 											</table>
+										</td>
+									</tr>";
+								break;
+							case 'F':
+								print"
+									<tr>
+										<td colspan='7' class='td-containt'>
+											<div class='div-table'>
+												Rapporto su statistiche conti
+											</div>
+											<br>
+											<table width='100%'>
+												".statistiche_conti($_SESSION['isLogged'])."
+												<tr>
+													<td>
+													<form method='post' class='padding-el' action='rapporti.php'>
+														<input type='submit' value='Indietro' />
+													</form>
+													</td>
+												</tr>
+											</table>		
 										</td>
 									</tr>";
 								break;

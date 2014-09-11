@@ -58,6 +58,7 @@
 				}
 				else{
 					print "<tr>
+						
 						<td colspan='7' class='td-containt'>
 							<div class='div-table'>Autenticazione</div>
 							<form class=\"padding-el\" method=\"post\" action=\"check.php\">
