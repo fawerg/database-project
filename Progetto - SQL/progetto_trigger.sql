@@ -30,6 +30,23 @@ $$ LANGUAGE 'plpgsql';
 CREATE TRIGGER check_info_bilancio BEFORE INSERT ON bilancio FOR EACH ROW EXECUTE PROCEDURE check_bilancio_user_iban();
 
 -------------
+CREATE OR REPLACE FUNCTION check_categoria() RETURNS TRIGGER AS $$
+DECLARE 
+	my_nome final_db.categoria.nome%TYPE;
+BEGIN 
+	SELECT nome INTO my_nome FROM final_db.categoria WHERE NEW.nome_padre=nome AND NEW.mail = mail AND NEW.tipo=tipo;
+	IF(my_nome IS NOT NULL) THEN 
+		RETURN NEW;
+	ELSE
+		RAISE EXCEPTION 'Errore: la categoria non corrisponde al proprietario.';
+	END IF;
+
+END
+
+
+$$ LANGUAGE 'plpgsql';
+CREATE TRIGGER check_info_categoria BEFORE INSERT ON categoria FOR EACH ROW EXECUTE PROCEDURE check_categoria();
+--------------
 CREATE OR REPLACE FUNCTION fill_cred_from_dep() RETURNS TRIGGER AS $$
 
 DECLARE

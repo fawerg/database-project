@@ -257,7 +257,6 @@ function insert_transazione($descrizione, $ammontare, $iban, $mail, $categoria,$
 		$result = pg_prepare($db, 'q', $sql);
 		$date = date_create();
 		$data= date("Y-m-d H:i:s.u");
-		echo $data;
 		$value = array($data, $descrizione, $ammontare, $iban, $mail, $categoria, $tipo);
 		$result = pg_execute($db, 'q', $value);
 		
