@@ -115,7 +115,7 @@
 												</tr>
 												<tr>
 													<td>Categoria: </td>";
-													$_POST['tipo'] == "Spesa" ? print "<td><select id='categoria' onChange='myFunction()' name='categoria'>".lista_categorie($_SESSION['isLogged'], '-')."<option>Altro</option></select></td>" : print "<td><select id='categoria' onChange='myFunction()' name='categoria'>".lista_categorie($_SESSION['isLogged'], '+')."<option>Altro</option></select></td>";
+													$_POST['tipo'] == "Spesa" ? print "<td><select id='categoria' onChange='myFunction()' name='categoria'>".lista_categorie($_SESSION['isLogged'], '-')."</select></td>" : print "<td><select id='categoria' onChange='myFunction()' name='categoria'>".lista_categorie($_SESSION['isLogged'], '+')."<option>Altro</option></select></td>";
 														print "
 												</tr>
 											
@@ -133,11 +133,14 @@
 						}
 						if(isset($_POST['crea'])){
 							insert_transazione($_POST['descrizione'], $_POST['ammontare'], $_POST['iban'], $_SESSION['isLogged'], $_POST['categoria'], $_POST['d'],'p');
-							header('Location: transazioni.php');
+						
+							print"
+							<meta http-equiv=\"refresh\" content=\"0\">";
 						}
 						if(isset($_POST['svuota'])){
 							remove_transazioni($_SESSION['isLogged']);
-							header('Location: transazioni.php');
+							print"
+							<meta http-equiv=\"refresh\" content=\"0\">";
 						}
 			}
 			else{
