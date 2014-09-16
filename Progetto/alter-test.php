@@ -13,7 +13,7 @@
 		<title>Home</title>
 	</head>
 	<body>
-		<div class="div-header" id="title">HOME BANKING - LA BANCA A CASA TUA --- </div>
+		<div class="div-header" id="title">HOME BANKING - LA BANCA A CASA TUA</div>
 		<table class='table-ext'>
 			<?php
 				include_once('bdlab-lib-fun.php');
