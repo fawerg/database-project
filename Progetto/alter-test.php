@@ -9,10 +9,11 @@
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 		<link href="alter-style.css" rel="stylesheet" type="text/css" />
+		<link rel="icon" href="../img/img1.ico" />
 		<title>Home</title>
 	</head>
 	<body>
-		<div class="div-header">HOME BANKING - LA BANCA A CASA TUA</div>
+		<div class="div-header" id="title">HOME BANKING - LA BANCA A CASA TUA --- </div>
 		<table class='table-ext'>
 			<?php
 				include_once('bdlab-lib-fun.php');
