@@ -45,6 +45,7 @@
 								<div class='div-table'>
 									Conti di deposito: 
 								</div>".print_conti_dep($_SESSION['isLogged'])."					
+								<br>
 								<div class='div-table'>
 									Conti di credito: 
 								</div>".print_conti_cred($_SESSION['isLogged'])."

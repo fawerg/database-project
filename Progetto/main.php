@@ -62,7 +62,7 @@
 								$data[] = $row;
 							}
 							
-							if($bool || strlen($_POST['password']) < 8 || strlen($_POST['password']) > 8){
+							if($bool || strlen($_POST['password']) < 8 || strlen($_POST['password']) > 16){
 								print '<div style="color: red;">';
 								$bool ? print 'Utente già presente, reinserire dati' : print 'Errore password: la lunghezza deve essere tra 8 e 16 caratteri';
 								print '</div> 

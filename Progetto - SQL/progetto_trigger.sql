@@ -33,14 +33,17 @@ CREATE TRIGGER check_info_bilancio BEFORE INSERT ON bilancio FOR EACH ROW EXECUT
 CREATE OR REPLACE FUNCTION check_categoria() RETURNS TRIGGER AS $$
 DECLARE 
 	my_nome final_db.categoria.nome%TYPE;
-BEGIN 
-	SELECT nome INTO my_nome FROM final_db.categoria WHERE NEW.nome_padre=nome AND NEW.mail = mail AND NEW.tipo=tipo;
-	IF(my_nome IS NOT NULL) THEN 
+BEGIN
+	IF(NEW.nome_padre IS NULL AND NEW.mail_padre IS NULL) THEN
 		RETURN NEW;
 	ELSE
-		RAISE EXCEPTION 'Errore: la categoria non corrisponde al proprietario.';
+		SELECT nome INTO my_nome FROM final_db.categoria WHERE NEW.nome_padre=nome AND NEW.mail = mail AND NEW.tipo=tipo;
+		IF(my_nome IS NOT NULL) THEN 
+			RETURN NEW;
+		ELSE
+			RAISE EXCEPTION 'Errore: la categoria non corrisponde al proprietario.';
+		END IF;
 	END IF;
-
 END
 
 
