@@ -1,5 +1,5 @@
 <?php
-    ini_set('display_errors','Off');
+    ini_set('display_errors','On');
     define ('LOGINEXPIRE', 300);
     ini_set('session.cookie_lifetime',LOGINEXPIRE);
     session_start();
@@ -113,7 +113,7 @@
 						if(isset($_POST['step'])){
 							if($_POST['categoria'] != "Altro"){
 								insert_transazione($_POST['descrizione'], $_POST['ammontare'], $_POST['iban'], $_SESSION['isLogged'], $_POST['categoria'], NULL, NULL);
-								header('Location: transazioni.php');
+								//header('Location: transazioni.php');
 							}
 							else{
 								print "<tr>

@@ -1,5 +1,5 @@
 <?php
-    ini_set('display_errors','Off');
+    ini_set('display_errors','On');
     define ('LOGINEXPIRE', 300);
     ini_set('session.cookie_lifetime',LOGINEXPIRE);
     session_start();

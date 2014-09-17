@@ -123,7 +123,7 @@ Categorie:";
 function print_transazioni($username){
 	$db = connection_pgsql();
 	
-	$sql= "SELECT data_transazione, iban, entita_economica, descrizione, nome, tipo, tipologia FROM final_db.transazione NATURAL JOIN final_db.categoria WHERE mail = $1";
+	$sql= "SELECT data_transazione, iban, entita_economica, descrizione, nome, tipo, type FROM final_db.transazione NATURAL JOIN final_db.categoria WHERE mail = $1";
 	$result= pg_prepare($db , "q", $sql);
 	$value = array($username);
 	$result= pg_execute($db, "q", $value);
@@ -134,7 +134,7 @@ Iban: ".$row['iban']."
 Ammontare: ".$row['tipo']."".$row['entita_economica']."
 Descrizione: ".$row['descrizione']."
 Categoria: ".$row['nome'];
-		if($row['tipologia']=='n'){
+		if($row['type']=='n'){
 			$s.="<br>Tipologia: Normale</pre>";	
 		}
 		else{
@@ -244,7 +244,7 @@ function remove_conto($mail, $iban){
 	pg_close($db);
 }
 
-function insert_transazione($descrizione, $ammontare, $iban, $mail, $categoria,$data1, $tipo){
+function insert_transazione($descrizione, $ammontare, $iban, $mail, $categoria, $data1, $tipo){
 	$db = connection_pgsql();
 	if($tipo==NULL && $data1== NULL){
 		$sql = "INSERT INTO final_db.transazione (descrizione, entita_economica, iban, mail, nome) VALUES ($1, $2, $3, $4, $5)";
